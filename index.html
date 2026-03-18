@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
 <style>
 /* =========================================================
    VERSIONE MIGLIORE DI ME
@@ -672,19 +671,237 @@ body {
 }
 .library-save-toggle:hover { color: var(--accent-dark); }
 
+
+/* ══════════════════════════════
+   AUTH SCREEN
+   ══════════════════════════════ */
+#authScreen {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+}
+.auth-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 36px 32px 28px;
+  width: 100%; max-width: 380px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+.auth-logo {
+  font-size: 2rem; margin-bottom: 6px;
+  animation: spin-slow 8s linear infinite;
+  display: inline-block; color: var(--accent);
+}
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 4px;
+}
+.auth-subtitle {
+  font-size: .82rem; color: var(--text-muted);
+  margin-bottom: 28px;
+}
+.auth-tabs {
+  display: flex; gap: 0; margin-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+}
+.auth-tab {
+  flex: 1; padding: 8px; background: none; border: none;
+  font-family: var(--font-body); font-size: .88rem;
+  font-weight: 500; color: var(--text-muted);
+  cursor: pointer; transition: all .18s;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+}
+.auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.auth-form { display: flex; flex-direction: column; gap: 12px; }
+.auth-form input {
+  width: 100%; padding: 10px 12px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: .9rem;
+  background: var(--bg-card-alt); color: var(--text-primary);
+  outline: none; transition: border-color .18s;
+}
+.auth-form input:focus { border-color: var(--accent); background: #fff; }
+.auth-btn {
+  padding: 11px; background: var(--accent); color: #fff;
+  border: none; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: .9rem; font-weight: 600;
+  cursor: pointer; transition: background .18s;
+  margin-top: 4px;
+}
+.auth-btn:hover { background: var(--accent-dark); }
+.auth-btn:disabled { opacity: .6; cursor: not-allowed; }
+.auth-error {
+  font-size: .78rem; color: var(--danger);
+  background: #fde8e8; padding: 8px 10px;
+  border-radius: var(--radius-sm); display: none;
+}
+.auth-error.visible { display: block; }
+
+/* User info in header */
+.header-user {
+  display: flex; align-items: center; gap: 10px;
+}
+.header-user-email {
+  font-size: .75rem; color: var(--accent-light);
+  max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.btn-logout {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  color: var(--text-on-dark); font-size: .75rem; padding: 4px 10px;
+  border-radius: 20px; cursor: pointer; font-family: var(--font-body);
+  transition: background .15s;
+}
+.btn-logout:hover { background: rgba(255,255,255,.2); }
+
+/* Loading overlay */
+#loadingOverlay {
+  position: fixed; inset: 0; z-index: 9998;
+  background: var(--bg); display: flex;
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 12px;
+}
+.loading-spinner {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin-fast .7s linear infinite;
+}
+@keyframes spin-fast { to { transform: rotate(360deg); } }
+.loading-text { font-size: .85rem; color: var(--text-muted); }
+
+
+/* ══ AUTH ══════════════════════════════════════════ */
+#authScreen {
+  position:fixed; inset:0; z-index:9999;
+  background:var(--bg); display:flex; align-items:center; justify-content:center;
+}
+.auth-card {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:36px 32px 28px;
+  width:100%; max-width:380px; box-shadow:var(--shadow-lg); text-align:center;
+}
+.auth-logo { font-size:2rem; color:var(--accent); display:inline-block; animation:spin-slow 8s linear infinite; margin-bottom:6px; }
+.auth-title { font-family:var(--font-display); font-size:1.4rem; font-weight:600; color:var(--text-primary); margin-bottom:4px; }
+.auth-subtitle { font-size:.82rem; color:var(--text-muted); margin-bottom:28px; }
+.auth-tabs { display:flex; margin-bottom:20px; border-bottom:2px solid var(--border); }
+.auth-tab {
+  flex:1; padding:8px; background:none; border:none;
+  font-family:var(--font-body); font-size:.88rem; font-weight:500;
+  color:var(--text-muted); cursor:pointer; transition:all .18s;
+  border-bottom:2px solid transparent; margin-bottom:-2px;
+}
+.auth-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.auth-form { display:flex; flex-direction:column; gap:12px; }
+.auth-form input {
+  width:100%; padding:10px 12px;
+  border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  font-family:var(--font-body); font-size:.9rem;
+  background:var(--bg-card-alt); color:var(--text-primary);
+  outline:none; transition:border-color .18s;
+}
+.auth-form input:focus { border-color:var(--accent); background:#fff; }
+.auth-btn {
+  padding:11px; background:var(--accent); color:#fff; border:none;
+  border-radius:var(--radius-sm); font-family:var(--font-body);
+  font-size:.9rem; font-weight:600; cursor:pointer; transition:background .18s; margin-top:4px;
+}
+.auth-btn:hover { background:var(--accent-dark); }
+.auth-btn:disabled { opacity:.6; cursor:not-allowed; }
+.auth-error {
+  font-size:.78rem; color:var(--danger); background:#fde8e8;
+  padding:8px 10px; border-radius:var(--radius-sm); display:none;
+}
+.auth-error.visible { display:block; }
+.header-user { display:flex; align-items:center; gap:10px; }
+.header-user-email { font-size:.75rem; color:var(--accent-light); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.btn-logout {
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+  color:var(--text-on-dark); font-size:.75rem; padding:4px 10px;
+  border-radius:20px; cursor:pointer; font-family:var(--font-body); transition:background .15s;
+}
+.btn-logout:hover { background:rgba(255,255,255,.2); }
+#loadingOverlay {
+  position:fixed; inset:0; z-index:9998; background:var(--bg);
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;
+}
+.loading-spinner {
+  width:36px; height:36px; border-radius:50%;
+  border:3px solid var(--border); border-top-color:var(--accent);
+  animation:spin-fast .7s linear infinite;
+}
+@keyframes spin-fast { to { transform:rotate(360deg); } }
+.loading-text { font-size:.85rem; color:var(--text-muted); }
 </style>
 </head>
 <body>
+
+<div id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Caricamento...</div>
+</div>
+
+<div id="authScreen" style="display:none">
+  <div class="auth-card">
+    <div class="auth-logo">✦</div>
+    <h1 class="auth-title">Versione Migliore di Me</h1>
+    <p class="auth-subtitle">Il tuo spazio personale per il benessere quotidiano</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin">Accedi</button>
+      <button class="auth-tab" id="tabRegister">Registrati</button>
+    </div>
+    <div class="auth-form">
+      <input type="email" id="authEmail" placeholder="Email" autocomplete="email" />
+      <input type="password" id="authPassword" placeholder="Password (min. 6 caratteri)" autocomplete="current-password" />
+      <div class="auth-error" id="authError"></div>
+      <button class="auth-btn" id="authSubmitBtn">Accedi</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Loading overlay -->
+<div id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Caricamento...</div>
+</div>
+
+<!-- Auth Screen -->
+<div id="authScreen" style="display:none">
+  <div class="auth-card">
+    <div class="auth-logo">✦</div>
+    <h1 class="auth-title">Versione Migliore di Me</h1>
+    <p class="auth-subtitle">Il tuo spazio personale per il benessere quotidiano</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Accedi</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Registrati</button>
+    </div>
+
+    <div class="auth-form">
+      <input type="email" id="authEmail" placeholder="Email" autocomplete="email" />
+      <input type="password" id="authPassword" placeholder="Password (min. 6 caratteri)" autocomplete="current-password" />
+      <div class="auth-error" id="authError"></div>
+      <button class="auth-btn" id="authSubmitBtn" onclick="handleAuthSubmit()">Accedi</button>
+    </div>
+  </div>
+</div>
 
 <header class="app-header">
   <div class="header-left">
     <span class="header-icon">✦</span>
     <h1 class="app-title">Versione Migliore di Me</h1>
   </div>
-  <span class="header-date" id="headerDate"></span>
+  <div class="header-user">
+    <span class="header-date" id="headerDate"></span>
+    <span class="header-user-email" id="headerUserEmail"></span>
+    <button class="btn-logout" id="btnLogout" style="display:none">Esci</button>
+  </div>
 </header>
 
-<main class="app-layout">
+<main class="app-layout" style="display:none">
 
   <!-- ═══ COLONNA SINISTRA ═══ -->
   <aside class="col-left">
@@ -886,14 +1103,41 @@ body {
 </main>
 
 <div class="toast" id="toast"></div>
-<div class="toast-reward" id="toastReward"><span class="toast-reward-icon" id="toastRewardIcon"></span><span id="toastRewardMsg"></span></div>
+<div class="toast-reward" id="toastReward">
+  <span class="toast-reward-icon" id="toastRewardIcon"></span>
+  <span id="toastRewardMsg"></span>
+</div>
 
-<script>
+<script type="module">
 'use strict';
+
+/* ── Firebase ── */
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const _app  = initializeApp({
+  apiKey: "AIzaSyBigcjh35iUCwdpSnq9iEei0BC33f0TX8s",
+  authDomain: "improve-myself-6eaac.firebaseapp.com",
+  projectId: "improve-myself-6eaac",
+  storageBucket: "improve-myself-6eaac.firebasestorage.app",
+  messagingSenderId: "48345211408",
+  appId: "1:48345211408:web:67ca4a36f607626f092095"
+});
+const _auth = getAuth(_app);
+const _db   = getFirestore(_app);
+
+/* ══════════════════════════════════════════════════════
+   FIREBASE INIT
+   ══════════════════════════════════════════════════════ */
 
 const LOCALE = 'it-IT';
 
-/* Palette colori disponibili per le categorie (bg, text, border) */
+/* ══════════════════════════════════════════════════════
+   PALETTE & CATEGORIE
+   ══════════════════════════════════════════════════════ */
 const COLOR_PALETTE = [
   { id:'terracotta', label:'Terracotta', bg:'#f5e6dc', text:'#8a4a2f', border:'#c97a52' },
   { id:'sage',       label:'Salvia',     bg:'#e4efe6', text:'#3a6644', border:'#6b9e78' },
@@ -911,12 +1155,8 @@ const COLOR_PALETTE = [
   { id:'mint',       label:'Menta',      bg:'#ddf5ec', text:'#1a5a40', border:'#4ab888' },
   { id:'gold',       label:'Oro',        bg:'#f5f0dc', text:'#6a5a1a', border:'#c8b040' },
 ];
+function getPalette(id) { return COLOR_PALETTE.find(p => p.id === id) || COLOR_PALETTE[0]; }
 
-function getPalette(id) {
-  return COLOR_PALETTE.find(p => p.id === id) || COLOR_PALETTE[0];
-}
-
-/* Categorie: built-in + custom salvate in localStorage */
 const BUILTIN_CATEGORIES = [
   { name:'Allenamento',   emoji:'🏋️', color:'sage' },
   { name:'Mobilità',      emoji:'🧘', color:'lavender' },
@@ -932,1283 +1172,977 @@ const BUILTIN_CATEGORIES = [
   { name:'Idratazione',   emoji:'💧', color:'slate' },
 ];
 
-function getCategories() {
-  const custom = JSON.parse(localStorage.getItem('vmm_categories') || '[]');
-  return [...BUILTIN_CATEGORIES, ...custom];
-}
-function saveCustomCategories(arr) {
-  localStorage.setItem('vmm_categories', JSON.stringify(arr));
-}
-function getCustomCategories() {
-  return JSON.parse(localStorage.getItem('vmm_categories') || '[]');
-}
-
-function getCategoryDef(name) {
-  return getCategories().find(c => c.name === name) || { name, emoji:'📌', color:'terracotta' };
-}
-
-/* Emoji lookup helper (backwards compat) */
-const CATEGORY_EMOJI = new Proxy({}, {
-  get(_, name) { return getCategoryDef(name).emoji; }
-});
-
 const DEMO_ACTIVITIES = [
-  { titolo: 'Mobilità mattina',    categoria: 'Mobilità',       orario: '07:00', durata: 20, note: 'Stretching e respiro diaframmatico' },
-  { titolo: 'Pausa movimento',     categoria: 'Routine',        orario: '10:30', durata: 10, note: 'Alzarsi dalla scrivania, camminata breve' },
-  { titolo: 'Bici / camminata',    categoria: 'Bici/Camminata', orario: '12:15', durata: 40, note: 'Giro al parco, passo moderato' },
-  { titolo: 'Allenamento casa',    categoria: 'Allenamento',    orario: '17:30', durata: 45, note: 'Corpo libero: squat, push-up, core' },
-  { titolo: 'Camminata digestiva', categoria: 'Bici/Camminata', orario: '20:00', durata: 20, note: 'Dopo cena, passo lento' },
+  { titolo:'Mobilità mattina',    categoria:'Mobilità',       orario:'07:00', durata:20, note:'Stretching e respiro diaframmatico' },
+  { titolo:'Pausa movimento',     categoria:'Routine',        orario:'10:30', durata:10, note:'Alzarsi dalla scrivania' },
+  { titolo:'Bici / camminata',    categoria:'Bici/Camminata', orario:'12:15', durata:40, note:'Giro al parco' },
+  { titolo:'Allenamento casa',    categoria:'Allenamento',    orario:'17:30', durata:45, note:'Corpo libero' },
+  { titolo:'Camminata digestiva', categoria:'Bici/Camminata', orario:'20:00', durata:20, note:'Dopo cena' },
 ];
 
+const WEEK_HOURS    = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+const DAY_NAMES_SHORT = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+
+const TIER_STEPS = [
+  { n:5,   name:'Bronzo',     icon:'🥉', cls:'tier-bronze',     bar:'#c97a52' },
+  { n:10,  name:'Argento',    icon:'🥈', cls:'tier-silver',     bar:'#8a9ab0' },
+  { n:25,  name:'Oro',        icon:'🥇', cls:'tier-gold',       bar:'#c9a84c' },
+  { n:50,  name:'Platino',    icon:'💎', cls:'tier-platinum',   bar:'#4ea8a0' },
+  { n:100, name:'Diamante',   icon:'💠', cls:'tier-diamond',    bar:'#5a60c8' },
+  { n:200, name:'Challenger', icon:'👑', cls:'tier-challenger', bar:'#b06ac0' },
+];
 
 /* ══════════════════════════════════════════════════════
-   LIBRERIA ATTIVITÀ
+   STATE
    ══════════════════════════════════════════════════════ */
-function getLibrary()    { return JSON.parse(localStorage.getItem('vmm_library') || '[]'); }
-function saveLibrary(d)  { localStorage.setItem('vmm_library', JSON.stringify(d)); }
-
-function addToLibrary(act) {
-  const lib = getLibrary();
-  if (lib.find(a => a.titolo.toLowerCase() === act.titolo.toLowerCase())) return false;
-  lib.push({ id: uid(), titolo: act.titolo, categoria: act.categoria, orario: act.orario, durata: act.durata, note: act.note || '' });
-  saveLibrary(lib);
-  return true;
-}
-
-function renderLibrary() {
-  const list = document.getElementById('libraryList');
-  if (!list) return;
-  const lib = getLibrary();
-  list.innerHTML = '';
-  if (lib.length === 0) {
-    list.innerHTML = '<p style="font-size:.75rem;color:var(--text-muted);text-align:center;padding:8px 0;">Nessuna attività in libreria.<br>Creane una e spunta «Salva nella libreria».</p>';
-    return;
-  }
-  lib.forEach(act => {
-    const catDef = getCategoryDef(act.categoria);
-    const pal    = getPalette(catDef.color);
-    const item   = document.createElement('div');
-    item.className = 'library-item';
-    item.dataset.id = act.id;
-    item.innerHTML = `
-      <span class="library-item-emoji">${catDef.emoji}</span>
-      <div class="library-item-body">
-        <div class="library-item-name">${escapeHtml(act.titolo)}</div>
-        <div class="library-item-meta">${act.orario || '--'} · ${act.durata ? act.durata+'min' : '—'} · ${escapeHtml(act.categoria)}</div>
-      </div>
-      <button class="library-item-del" data-id="${act.id}" title="Rimuovi dalla libreria">✕</button>
-    `;
-    item.addEventListener('click', e => {
-      if (e.target.classList.contains('library-item-del')) return;
-      prefillFormFromLibrary(act);
-    });
-    item.querySelector('.library-item-del').addEventListener('click', e => {
-      e.stopPropagation();
-      const lib2 = getLibrary().filter(a => a.id !== act.id);
-      saveLibrary(lib2);
-      renderLibrary();
-      showToast('Rimossa dalla libreria');
-    });
-    list.appendChild(item);
-  });
-}
-
+let _uid = null;
+let charts = { sonno:null, passi:null };
 let librarySaveEnabled = false;
-function prefillFormFromLibrary(act) {
-  // Apri form se chiuso
-  document.getElementById('activityFormCard').classList.remove('form-card--collapsed');
-  document.getElementById('activityFormCard').classList.add('form-card--open');
-  document.getElementById('btnOpenForm').style.display = 'none';
-  // Precompila
-  document.getElementById('actTitolo').value  = act.titolo;
-  document.getElementById('actOrario').value  = act.orario || '08:00';
-  document.getElementById('actDurata').value  = act.durata || '';
-  document.getElementById('actNote').value    = act.note || '';
-  document.getElementById('actDataInizio').value = state.selectedDate;
-  // Seleziona categoria
-  document.querySelectorAll('.cat-chip').forEach(ch => {
-    ch.classList.toggle('selected', ch.dataset.name === act.categoria);
-  });
-  showToast(`📚 "${act.titolo}" caricata dal form`);
-}
-
-/* ══════════════════════════════════════════════════════
-   GAMIFICATION — Storage
-   ══════════════════════════════════════════════════════ */
-function getGamData()   { return JSON.parse(localStorage.getItem('vmm_gam') || '{}'); }
-function saveGamData(d) { localStorage.setItem('vmm_gam', JSON.stringify(d)); }
-
-/* Segna accesso giornaliero; ritorna { streak, total, newRecord } */
-function recordDailyAccess() {
-  const gam   = getGamData();
-  const today = formatDate(new Date());
-  if (gam.lastAccess === today) return { streak: gam.accessStreak || 1, total: gam.accessTotal || 1, newRecord: false };
-
-  const yesterday = addDays(today, -1);
-  const streak = gam.lastAccess === yesterday ? (gam.accessStreak || 0) + 1 : 1;
-  const total  = (gam.accessTotal || 0) + 1;
-  const prev   = gam.accessStreak || 0;
-  gam.lastAccess  = today;
-  gam.accessStreak = streak;
-  gam.accessTotal  = total;
-  saveGamData(gam);
-
-  const milestones = [1,5,10,25,50,100];
-  const newRecord = milestones.includes(streak) && streak > prev;
-  return { streak, total, newRecord, milestoneStreak: streak };
-}
-
-/* Segna riepilogo giornaliero inserito */
-function recordDailySummary() {
-  const gam   = getGamData();
-  const today = formatDate(new Date());
-  if (gam.lastSummary === today) return { streak: gam.summaryStreak||0, total: gam.summaryTotal||0, isNew: false };
-
-  const yesterday = addDays(today, -1);
-  const streak = gam.lastSummary === yesterday ? (gam.summaryStreak||0)+1 : 1;
-  const total  = (gam.summaryTotal||0)+1;
-  const prev   = gam.summaryStreak||0;
-  gam.lastSummary   = today;
-  gam.summaryStreak = streak;
-  gam.summaryTotal  = total;
-  saveGamData(gam);
-
-  const milestones = [1,5,10,25,50,100];
-  const isNew = milestones.includes(streak) && streak > prev;
-  return { streak, total, isNew };
-}
-
-/* Aggiorna conteggio completamenti per attività specifica */
-function recordActivityCompletion(titolo) {
-  const gam = getGamData();
-  if (!gam.actCounts) gam.actCounts = {};
-  const key = titolo.toLowerCase().trim();
-  const prev = gam.actCounts[key] || 0;
-  gam.actCounts[key] = prev + 1;
-  saveGamData(gam);
-
-  const tiers = [
-    { n:5,   name:'Bronzo',      icon:'🥉', cls:'tier-bronze' },
-    { n:10,  name:'Argento',     icon:'🥈', cls:'tier-silver' },
-    { n:25,  name:'Oro',         icon:'🥇', cls:'tier-gold' },
-    { n:50,  name:'Platino',     icon:'💎', cls:'tier-platinum' },
-    { n:100, name:'Diamante',    icon:'💠', cls:'tier-diamond' },
-    { n:200, name:'Challenger',  icon:'👑', cls:'tier-challenger' },
-  ];
-  const newTier = tiers.find(t => t.n === gam.actCounts[key]);
-  return { count: gam.actCounts[key], newTier };
-}
-
-/* Controlla completamento periodo (day/week/month/year) */
-function checkPeriodCompletion(period) {
-  const today      = formatDate(new Date());
-  const activities = getActivities();
-  const gam        = getGamData();
-  if (!gam.periodDone) gam.periodDone = {};
-
-  let dates = [];
-  const d   = new Date(today + 'T12:00:00');
-
-  if (period === 'day') {
-    dates = [today];
-  } else if (period === 'week') {
-    const mon = getMondayOf(today);
-    for (let i=0;i<7;i++) dates.push(addDays(mon,i));
-  } else if (period === 'month') {
-    const days = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
-    for (let i=1;i<=days;i++) {
-      const dd = new Date(d.getFullYear(), d.getMonth(), i);
-      dates.push(formatDate(dd));
-    }
-  } else if (period === 'year') {
-    for (let m=0;m<12;m++) {
-      const days = new Date(d.getFullYear(), m+1, 0).getDate();
-      for (let i=1;i<=days;i++) {
-        dates.push(formatDate(new Date(d.getFullYear(),m,i)));
-      }
-    }
-  }
-
-  // Almeno una attività e tutte completate
-  const allActs = dates.flatMap(dt => activities[dt] || []);
-  if (allActs.length === 0) return false;
-  const allDone = allActs.every(a => a.done);
-
-  const key = period + '_' + (period === 'day' ? today :
-    period === 'week' ? getMondayOf(today) :
-    period === 'month' ? today.slice(0,7) :
-    today.slice(0,4));
-
-  if (allDone && !gam.periodDone[key]) {
-    gam.periodDone[key] = true;
-    saveGamData(gam);
-    return true; // nuova conquista
-  }
-  return false;
-}
-
-/* Toast reward animato */
-let rewardToastTimeout = null;
-function showRewardToast(icon, msg) {
-  const el    = document.getElementById('toastReward');
-  const elIcon= document.getElementById('toastRewardIcon');
-  const elMsg = document.getElementById('toastRewardMsg');
-  elIcon.textContent = icon;
-  elMsg.textContent  = msg;
-  el.classList.add('visible');
-  if (rewardToastTimeout) clearTimeout(rewardToastTimeout);
-  rewardToastTimeout = setTimeout(() => el.classList.remove('visible'), 3500);
-}
-
-/* ─── Rendering sezione rewards ─── */
-function renderRewards() {
-  const container = document.getElementById('rewardsContainer');
-  if (!container) return;
-  const gam  = getGamData();
-  const today = formatDate(new Date());
-
-  const STREAK_STEPS = [1,5,10,25,50,100];
-  const TIER_STEPS   = [
-    { n:5,   name:'Bronzo',     icon:'🥉', cls:'tier-bronze',     bar:'#c97a52' },
-    { n:10,  name:'Argento',    icon:'🥈', cls:'tier-silver',     bar:'#8a9ab0' },
-    { n:25,  name:'Oro',        icon:'🥇', cls:'tier-gold',       bar:'#c9a84c' },
-    { n:50,  name:'Platino',    icon:'💎', cls:'tier-platinum',   bar:'#4ea8a0' },
-    { n:100, name:'Diamante',   icon:'💠', cls:'tier-diamond',    bar:'#5a60c8' },
-    { n:200, name:'Challenger', icon:'👑', cls:'tier-challenger', bar:'#b06ac0' },
-  ];
-
-  function streakItem(label, streak, total, color) {
-    const nextStep = STREAK_STEPS.find(s => s > streak) || STREAK_STEPS[STREAK_STEPS.length-1];
-    const prevStep = STREAK_STEPS.slice().reverse().find(s => s <= streak) || 0;
-    const pct = streak >= 100 ? 100 : Math.round((streak - prevStep) / (nextStep - prevStep) * 100);
-    const active = streak > 0;
-    return `
-      <div class="reward-item">
-        <div class="reward-icon ${active ? '' : 'locked'}">🔥</div>
-        <div class="reward-body">
-          <div class="reward-name ${active ? '' : 'locked'}">${label}</div>
-          <div class="reward-sub">Consecutivi: ${streak} · Totali: ${total}</div>
-          <div class="reward-bar-wrap"><div class="reward-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-        </div>
-        <div class="streak-badge ${active ? 'active' : ''}">${streak}</div>
-      </div>`;
-  }
-
-  function periodItem(label, icon, achieved) {
-    return `
-      <div class="reward-item">
-        <div class="reward-icon ${achieved ? '' : 'locked'}">${icon}</div>
-        <div class="reward-body">
-          <div class="reward-name ${achieved ? '' : 'locked'}">${label}</div>
-          <div class="reward-sub">${achieved ? '✓ Completato!' : 'Completa tutte le attività del periodo'}</div>
-        </div>
-      </div>`;
-  }
-
-  // Attività per rank
-  const actCounts = gam.actCounts || {};
-  const activities = getActivities();
-  const allTitles  = [...new Set(Object.values(activities).flat().map(a => a.titolo))];
-
-  let actRankHTML = '';
-  allTitles.slice(0, 8).forEach(titolo => {
-    const key   = titolo.toLowerCase().trim();
-    const count = actCounts[key] || 0;
-    const curTier = TIER_STEPS.slice().reverse().find(t => count >= t.n);
-    const nextTier = TIER_STEPS.find(t => t.n > count);
-    const icon  = curTier ? curTier.icon : '🎯';
-    const cls   = curTier ? curTier.cls : '';
-    const pct   = nextTier
-      ? Math.round(((count - (curTier?.n||0)) / (nextTier.n - (curTier?.n||0))) * 100)
-      : 100;
-    const barColor = curTier ? curTier.bar : '#a09890';
-    const sub = nextTier
-      ? `${count}/${nextTier.n} → ${nextTier.name}`
-      : `${count} completamenti · Challenger! 👑`;
-    actRankHTML += `
-      <div class="reward-item">
-        <div class="reward-icon"><span class="${cls}">${icon}</span></div>
-        <div class="reward-body">
-          <div class="reward-name">${escapeHtml(titolo)}</div>
-          <div class="reward-sub">${sub}</div>
-          <div class="reward-bar-wrap"><div class="reward-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
-        </div>
-      </div>`;
-  });
-  if (!actRankHTML) actRankHTML = '<p style="font-size:.73rem;color:var(--text-muted);padding:4px 0">Completa attività per sbloccare rank</p>';
-
-  // Period done keys
-  const pd = gam.periodDone || {};
-  const dayKey   = 'day_'   + today;
-  const weekKey  = 'week_'  + getMondayOf(today);
-  const monthKey = 'month_' + today.slice(0,7);
-  const yearKey  = 'year_'  + today.slice(0,4);
-
-  container.innerHTML = `
-    <div class="rewards-group">
-      <div class="rewards-group-title">🔥 Streak accessi</div>
-      ${streakItem('Accesso quotidiano', gam.accessStreak||0, gam.accessTotal||0, '#b5804f')}
-    </div>
-    <div class="rewards-group">
-      <div class="rewards-group-title">📋 Streak riepilogo</div>
-      ${streakItem('Riepilogo giornata', gam.summaryStreak||0, gam.summaryTotal||0, '#5b8fa8')}
-    </div>
-    <div class="rewards-group">
-      <div class="rewards-group-title">✅ Completamenti periodo</div>
-      ${periodItem('Giornata perfetta', '☀️', !!pd[dayKey])}
-      ${periodItem('Settimana perfetta', '📅', !!pd[weekKey])}
-      ${periodItem('Mese perfetto', '🗓️', !!pd[monthKey])}
-      ${periodItem('Anno perfetto', '🎆', !!pd[yearKey])}
-    </div>
-    <div class="rewards-group">
-      <div class="rewards-group-title">🏅 Rank attività</div>
-      ${actRankHTML}
-    </div>
-  `;
-}
+let _authTab = 'login';
 
 const state = {
   currentYear:  new Date().getFullYear(),
   currentMonth: new Date().getMonth(),
   selectedDate: formatDate(new Date()),
-  calView: 'settimana',  // 'giorno' | 'settimana' | 'mese'
+  calView: 'settimana',
 };
 
-let charts = { sonno: null, passi: null };
-
-/* ── Utility ── */
+/* ══════════════════════════════════════════════════════
+   UTILITY
+   ══════════════════════════════════════════════════════ */
 function formatDate(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 function formatDateDisplay(ds) {
-  return new Date(ds + 'T12:00:00').toLocaleDateString(LOCALE, { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  return new Date(ds+'T12:00:00').toLocaleDateString(LOCALE,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 }
-function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function capitalize(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function escapeHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function getActivities() { return JSON.parse(localStorage.getItem('vmm_activities') || '{}'); }
-function saveActivities(d) { localStorage.setItem('vmm_activities', JSON.stringify(d)); }
-function getHealthData()   { return JSON.parse(localStorage.getItem('vmm_health')     || '{}'); }
-function saveHealthData(d) { localStorage.setItem('vmm_health',     JSON.stringify(d)); }
+function getMondayOf(ds) {
+  const d = new Date(ds+'T12:00:00');
+  const dow = d.getDay();
+  d.setDate(d.getDate() + (dow===0?-6:1-dow));
+  return formatDate(d);
+}
+function addDays(ds, n) {
+  const d = new Date(ds+'T12:00:00');
+  d.setDate(d.getDate()+n);
+  return formatDate(d);
+}
+function getLastNDays(n) {
+  const days=[];
+  for(let i=n-1;i>=0;i--){ const d=new Date(); d.setDate(d.getDate()-i); days.push(formatDate(d)); }
+  return days;
+}
+function calcAvg(arr) {
+  const v=arr.filter(x=>x!=null);
+  return v.length ? (v.reduce((s,x)=>s+x,0)/v.length).toFixed(1) : null;
+}
 
-let toastTimeout = null;
+/* ══════════════════════════════════════════════════════
+   FIRESTORE DATA LAYER
+   ══════════════════════════════════════════════════════ */
+async function fsGet(key, def) {
+  try {
+    const snap = await getDoc(doc(_db,'users',_uid,'data',key));
+    return snap.exists() ? snap.data().value : def;
+  } catch(e) { console.warn('fsGet',key,e); return def; }
+}
+async function fsSet(key, value) {
+  try {
+    await setDoc(doc(_db,'users',_uid,'data',key),{value});
+  } catch(e) { console.warn('fsSet',key,e); }
+}
+
+async function getActivities()    { return await fsGet('activities',{}); }
+async function saveActivities(d)  { await fsSet('activities',d); }
+async function getHealthData()    { return await fsGet('health',{}); }
+async function saveHealthData(d)  { await fsSet('health',d); }
+async function getLibrary()       { return await fsGet('library',[]); }
+async function saveLibrary(d)     { await fsSet('library',d); }
+async function getGamData()       { return await fsGet('gam',{}); }
+async function saveGamData(d)     { await fsSet('gam',d); }
+async function getCustomCategories()    { return await fsGet('categories',[]); }
+async function saveCustomCategories(d)  { await fsSet('categories',d); }
+
+async function getCategories() {
+  const custom = await getCustomCategories();
+  return [...BUILTIN_CATEGORIES, ...custom];
+}
+async function getCategoryDef(name) {
+  const cats = await getCategories();
+  return cats.find(c=>c.name===name) || {name,emoji:'📌',color:'terracotta'};
+}
+
+/* ══════════════════════════════════════════════════════
+   TOAST
+   ══════════════════════════════════════════════════════ */
+let _toastT=null, _rewardT=null;
 function showToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('visible');
+  if(_toastT) clearTimeout(_toastT);
+  _toastT=setTimeout(()=>el.classList.remove('visible'),2400);
+}
+function showRewardToast(icon,msg) {
+  document.getElementById('toastRewardIcon').textContent=icon;
+  document.getElementById('toastRewardMsg').textContent=msg;
+  const el=document.getElementById('toastReward');
   el.classList.add('visible');
-  if (toastTimeout) clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => el.classList.remove('visible'), 2400);
+  if(_rewardT) clearTimeout(_rewardT);
+  _rewardT=setTimeout(()=>el.classList.remove('visible'),3500);
 }
 
-/* ── Header ── */
-function renderHeader() {
-  document.getElementById('headerDate').textContent =
-    capitalize(new Date().toLocaleDateString(LOCALE, { weekday:'long', day:'numeric', month:'long', year:'numeric' }));
+/* ══════════════════════════════════════════════════════
+   PASSI SCORING
+   ══════════════════════════════════════════════════════ */
+function stepsScore(p)  { return p>0 ? Math.min(Math.round(p/80),120) : 0; }
+function stepsColor(sc) {
+  if(sc>=100) return {bar:'#4ab888',label:'🟢 Ottimo!'};
+  if(sc>=75)  return {bar:'#c9a84c',label:'🟡 Quasi!'};
+  if(sc>=38)  return {bar:'#d97060',label:'🟠 Continua'};
+  return {bar:'#c0614a',label:'🔴 Muoviti!'};
 }
 
-/* ══════════════════════════════════════
-   CALENDARIO — multi-view
-   ══════════════════════════════════════ */
-
-/* Ritorna lunedì della settimana di una data */
-function getMondayOf(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
-  const dow = d.getDay(); // 0=Dom
-  const diff = dow === 0 ? -6 : 1 - dow;
-  d.setDate(d.getDate() + diff);
-  return formatDate(d);
+/* ══════════════════════════════════════════════════════
+   GAMIFICATION
+   ══════════════════════════════════════════════════════ */
+async function recordDailyAccess() {
+  const gam=await getGamData();
+  const today=formatDate(new Date());
+  if(gam.lastAccess===today) return {streak:gam.accessStreak||1,total:gam.accessTotal||1,newRecord:false};
+  const streak = gam.lastAccess===addDays(today,-1) ? (gam.accessStreak||0)+1 : 1;
+  const total  = (gam.accessTotal||0)+1;
+  const prev   = gam.accessStreak||0;
+  gam.lastAccess=today; gam.accessStreak=streak; gam.accessTotal=total;
+  await saveGamData(gam);
+  const newRecord=[1,5,10,25,50,100].includes(streak)&&streak>prev;
+  return {streak,total,newRecord,milestoneStreak:streak};
 }
 
-/* Aggiunge N giorni a una stringa data */
-function addDays(dateStr, n) {
-  const d = new Date(dateStr + 'T12:00:00');
-  d.setDate(d.getDate() + n);
-  return formatDate(d);
+async function recordDailySummary() {
+  const gam=await getGamData();
+  const today=formatDate(new Date());
+  if(gam.lastSummary===today) return {streak:gam.summaryStreak||0,total:gam.summaryTotal||0,isNew:false};
+  const streak = gam.lastSummary===addDays(today,-1) ? (gam.summaryStreak||0)+1 : 1;
+  const total  = (gam.summaryTotal||0)+1;
+  const prev   = gam.summaryStreak||0;
+  gam.lastSummary=today; gam.summaryStreak=streak; gam.summaryTotal=total;
+  await saveGamData(gam);
+  return {streak,total,isNew:[1,5,10,25,50,100].includes(streak)&&streak>prev};
 }
 
-function renderCalendar() {
-  const { calView } = state;
-  // Aggiorna bottoni vista
-  document.querySelectorAll('.view-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.view === calView);
-  });
-  if (calView === 'giorno')     renderViewDay();
-  else if (calView === 'settimana') renderViewWeek();
-  else                          renderViewMonth();
+async function recordActivityCompletion(titolo) {
+  const gam=await getGamData();
+  if(!gam.actCounts) gam.actCounts={};
+  const key=titolo.toLowerCase().trim();
+  const prev=gam.actCounts[key]||0;
+  gam.actCounts[key]=prev+1;
+  await saveGamData(gam);
+  const newTier=TIER_STEPS.find(t=>t.n===gam.actCounts[key]);
+  return {count:gam.actCounts[key],newTier};
 }
 
-/* ── VISTA GIORNO ── */
-function renderViewDay() {
-  const { selectedDate } = state;
-  const today      = formatDate(new Date());
-  const activities = getActivities();
-  const d          = new Date(selectedDate + 'T12:00:00');
-
-  document.getElementById('calTitle').textContent =
-    capitalize(d.toLocaleDateString(LOCALE, { weekday:'long', day:'numeric', month:'long', year:'numeric' }));
-
-  const weekdays = document.getElementById('calWeekdays');
-  weekdays.style.display = 'none';
-
-  const grid = document.getElementById('calendarGrid');
-  grid.className = 'day-view';
-  grid.innerHTML = '';
-
-  const hdr = document.createElement('div');
-  hdr.className = 'day-view-header' + (selectedDate === today ? ' today-header' : '');
-  hdr.textContent = selectedDate === today ? 'Oggi' : capitalize(d.toLocaleDateString(LOCALE, { weekday:'long', day:'numeric', month:'long' }));
-  grid.appendChild(hdr);
-
-  const timeline = document.createElement('div');
-  timeline.className = 'day-timeline';
-
-  const dayActs = (activities[selectedDate] || []).slice().sort((a,b) => a.orario.localeCompare(b.orario));
-
-  // Ore 6-22
-  for (let h = 6; h <= 22; h++) {
-    const row = document.createElement('div');
-    row.className = 'day-hour-row';
-
-    const label = document.createElement('div');
-    label.className = 'day-hour-label';
-    label.textContent = h + ':00';
-    row.appendChild(label);
-
-    const actsWrap = document.createElement('div');
-    actsWrap.className = 'day-hour-activities';
-
-    const hourActs = dayActs.filter(a => {
-      const hh = parseInt((a.orario || '00:00').split(':')[0]);
-      return hh === h;
-    });
-
-    hourActs.forEach(act => {
-      const block = document.createElement('div');
-      block.className = 'day-act-block' + (act.done ? ' done' : '');
-      const emoji = CATEGORY_EMOJI[act.categoria] || '⭐';
-      const dur   = act.durata ? ` · ${act.durata} min` : '';
-      block.innerHTML = `<div class="day-act-block-title">${emoji} ${escapeHtml(act.titolo)}</div><div class="day-act-block-meta">${act.orario}${dur} · ${escapeHtml(act.categoria)}</div>`;
-      block.addEventListener('click', () => toggleActivityDone(selectedDate, act.id));
-      actsWrap.appendChild(block);
-    });
-
-    row.appendChild(actsWrap);
-    timeline.appendChild(row);
-  }
-
-  grid.appendChild(timeline);
-}
-
-/* ── VISTA SETTIMANA ── */
-const WEEK_HOURS = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
-const DAY_NAMES_SHORT = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
-
-function renderViewWeek() {
-  const { selectedDate } = state;
-  const today      = formatDate(new Date());
-  const activities = getActivities();
-  const monday     = getMondayOf(selectedDate);
-
-  // Titolo
-  const monD = new Date(monday + 'T12:00:00');
-  const sunD = new Date(addDays(monday, 6) + 'T12:00:00');
-  const fmtD = d => d.toLocaleDateString(LOCALE, { day:'numeric', month:'short' });
-  document.getElementById('calTitle').textContent =
-    `${fmtD(monD)} – ${fmtD(sunD)} ${sunD.getFullYear()}`;
-
-  document.getElementById('calWeekdays').style.display = 'none';
-
-  const grid = document.getElementById('calendarGrid');
-  grid.className = 'cal-view-week'; // no calendar-grid, usiamo layout custom
-  grid.innerHTML = '';
-
-  const wrap = document.createElement('div');
-  wrap.className = 'cal-view-week-wrap';
-
-  /* ── Colonna orari ── */
-  const timeCol = document.createElement('div');
-  timeCol.className = 'week-time-col';
-  WEEK_HOURS.forEach(h => {
-    const slot = document.createElement('div');
-    slot.className = 'week-time-slot';
-    slot.textContent = h + ':00';
-    timeCol.appendChild(slot);
-  });
-  wrap.appendChild(timeCol);
-
-  /* ── Griglia 7 giorni ── */
-  const daysGrid = document.createElement('div');
-  daysGrid.className = 'week-days-grid';
-
-  for (let i = 0; i < 7; i++) {
-    const dateStr = addDays(monday, i);
-    const d       = new Date(dateStr + 'T12:00:00');
-    const isToday    = dateStr === today;
-    const isSelected = dateStr === selectedDate;
-    const dayActs = (activities[dateStr] || []).slice().sort((a,b) => a.orario.localeCompare(b.orario));
-
-    const col = document.createElement('div');
-    col.className = 'week-day-col';
-
-    /* Header giorno */
-    const hdr = document.createElement('div');
-    hdr.className = 'week-day-header'
-      + (isToday ? ' today-col' : '')
-      + (isSelected ? ' selected-col' : '');
-    hdr.textContent = `${DAY_NAMES_SHORT[i]} ${d.getDate()}`;
-    col.appendChild(hdr);
-
-    /* Body con slot orarie */
-    const body = document.createElement('div');
-    body.className = 'week-day-body'
-      + (isToday ? ' today-body' : '')
-      + (isSelected ? ' selected-body' : '');
-
-    body.addEventListener('click', () => {
-      state.selectedDate = dateStr;
-      renderCalendar();
-      renderDayDetail();
-      document.getElementById('actDataInizio').value = dateStr;
-    });
-
-    WEEK_HOURS.forEach(h => {
-      const slot = document.createElement('div');
-      slot.className = 'week-hour-slot';
-
-      // Attività che iniziano in quest'ora
-      const slotActs = dayActs.filter(a => parseInt((a.orario || '00:00').split(':')[0]) === h);
-      slotActs.forEach(act => {
-        const pill = document.createElement('div');
-        pill.className = 'week-act-pill' + (act.done ? ' done' : '');
-        const catDef = getCategoryDef(act.categoria);
-        const pal    = getPalette(catDef.color);
-        if (!act.done) {
-          pill.style.background  = pal.bg;
-          pill.style.color       = pal.text;
-          pill.style.borderColor = pal.border;
-        }
-        pill.textContent = `${act.orario} ${catDef.emoji} ${act.titolo}`;
-        pill.title = `${act.orario} · ${act.titolo}${act.done ? ' ✓' : ''}`;
-        pill.addEventListener('click', e => {
-          e.stopPropagation();
-          toggleActivityDone(dateStr, act.id);
-        });
-        slot.appendChild(pill);
-      });
-
-      body.appendChild(slot);
-    });
-
-    col.appendChild(body);
-    daysGrid.appendChild(col);
-  }
-
-  wrap.appendChild(daysGrid);
-  grid.appendChild(wrap);
-}
-
-/* ── VISTA MESE ── */
-function renderViewMonth() {
-  const { currentYear, currentMonth, selectedDate } = state;
-  const today      = formatDate(new Date());
-  const activities = getActivities();
-
-  document.getElementById('calTitle').textContent =
-    capitalize(new Date(currentYear, currentMonth, 1)
-      .toLocaleDateString(LOCALE, { month:'long', year:'numeric' }));
-
-  const weekdays = document.getElementById('calWeekdays');
-  weekdays.style.display = '';
-
-  const grid = document.getElementById('calendarGrid');
-  grid.className = 'calendar-grid cal-view-month';
-  grid.innerHTML = '';
-
-  const firstDay      = new Date(currentYear, currentMonth, 1).getDay();
-  const startOffset   = firstDay === 0 ? 6 : firstDay - 1;
-  const daysInMonth   = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
-  const totalCells    = Math.ceil((startOffset + daysInMonth) / 7) * 7;
-
-  for (let i = 0; i < totalCells; i++) {
-    let day, dateStr, otherMonth = false;
-    if (i < startOffset) {
-      day = prevMonthDays - startOffset + i + 1;
-      const pm = currentMonth === 0 ? 11 : currentMonth - 1;
-      const py = currentMonth === 0 ? currentYear - 1 : currentYear;
-      dateStr = `${py}-${String(pm+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-      otherMonth = true;
-    } else if (i >= startOffset + daysInMonth) {
-      day = i - startOffset - daysInMonth + 1;
-      const nm = currentMonth === 11 ? 0 : currentMonth + 1;
-      const ny = currentMonth === 11 ? currentYear + 1 : currentYear;
-      dateStr = `${ny}-${String(nm+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-      otherMonth = true;
-    } else {
-      day = i - startOffset + 1;
-      dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    }
-    grid.appendChild(buildDayCell(dateStr, day, today, selectedDate, activities, otherMonth));
-  }
-}
-
-/* Costruisce una singola cella giorno (condivisa fra week e month) */
-function buildDayCell(dateStr, day, today, selectedDate, activities, otherMonth) {
-  const cell = document.createElement('div');
-  cell.className = 'cal-day';
-  if (otherMonth)              cell.classList.add('cal-day--other-month');
-  if (dateStr === today)       cell.classList.add('cal-day--today');
-  if (dateStr === selectedDate) cell.classList.add('cal-day--selected');
-
-  // Evidenzia la settimana corrente in vista settimana
-  if (state.calView === 'settimana') {
-    const monday = getMondayOf(selectedDate);
-    const sunday = addDays(monday, 6);
-    if (dateStr >= monday && dateStr <= sunday && dateStr !== selectedDate) {
-      cell.classList.add('cal-day--in-week');
-    }
-    if (dateStr === monday) cell.classList.add('cal-day--week-start');
-    if (dateStr === sunday) cell.classList.add('cal-day--week-end');
-  }
-
-  const numEl = document.createElement('div');
-  numEl.className = 'cal-day-num';
-  numEl.textContent = day;
-  cell.appendChild(numEl);
-
-  const dayActs = (activities[dateStr] || []).slice().sort((a,b) => a.orario.localeCompare(b.orario));
-  if (dayActs.length > 0) {
-    const listEl = document.createElement('div');
-    listEl.className = 'cal-activity-list';
-    const MAX = state.calView === 'mese' ? 2 : state.calView === 'settimana' ? 10 : 4;
-
-    dayActs.slice(0, MAX).forEach(act => {
-      const pill = document.createElement('div');
-      pill.className = 'cal-activity-pill' + (act.done ? ' done' : '');
-      pill.textContent = `${CATEGORY_EMOJI[act.categoria] || '•'} ${act.titolo}`;
-      pill.title = `${act.orario} · ${act.titolo}${act.done ? ' ✓' : ''}`;
-      pill.addEventListener('click', e => { e.stopPropagation(); toggleActivityDone(dateStr, act.id); });
-      listEl.appendChild(pill);
-    });
-
-    if (dayActs.length > MAX) {
-      const more = document.createElement('div');
-      more.className = 'cal-more';
-      more.textContent = `+${dayActs.length - MAX} altre`;
-      listEl.appendChild(more);
-    }
-    cell.appendChild(listEl);
-  }
-
-  cell.addEventListener('click', () => {
-    state.selectedDate = dateStr;
-    renderCalendar();
-    renderDayDetail();
-    document.getElementById('actDataInizio').value = dateStr;
-  });
-  return cell;
-}
-
-/* ══════════════════════════════════════
-   DETTAGLIO GIORNO
-   ══════════════════════════════════════ */
-function renderDayDetail() {
-  const { selectedDate } = state;
-  const activities = getActivities();
-  const dayActs = (activities[selectedDate] || []).slice().sort((a,b) => a.orario.localeCompare(b.orario));
-
-  document.getElementById('detailDateTitle').textContent =
-    capitalize(formatDateDisplay(selectedDate));
-
-  const countEl = document.getElementById('detailActivityCount');
-  countEl.textContent = dayActs.length > 0 ? `${dayActs.length} attività` : '';
-
-  /* Barra progresso */
-  const progressWrap = document.getElementById('detailProgress');
-  if (dayActs.length > 0) {
-    const doneCnt = dayActs.filter(a => a.done).length;
-    const pct = Math.round(doneCnt / dayActs.length * 100);
-    document.getElementById('progressText').textContent = `${doneCnt} / ${dayActs.length} completate`;
-    document.getElementById('progressPct').textContent  = `${pct}%`;
-    document.getElementById('progressFill').style.width = pct + '%';
-    progressWrap.style.display = 'block';
+async function checkPeriodCompletion(period) {
+  const today=formatDate(new Date());
+  const activities=await getActivities();
+  const gam=await getGamData();
+  if(!gam.periodDone) gam.periodDone={};
+  const d=new Date(today+'T12:00:00');
+  let dates=[];
+  if(period==='day') { dates=[today]; }
+  else if(period==='week') { const m=getMondayOf(today); for(let i=0;i<7;i++) dates.push(addDays(m,i)); }
+  else if(period==='month') {
+    const days=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+    for(let i=1;i<=days;i++) dates.push(formatDate(new Date(d.getFullYear(),d.getMonth(),i)));
   } else {
-    progressWrap.style.display = 'none';
+    for(let m=0;m<12;m++) {
+      const days=new Date(d.getFullYear(),m+1,0).getDate();
+      for(let i=1;i<=days;i++) dates.push(formatDate(new Date(d.getFullYear(),m,i)));
+    }
+  }
+  const all=dates.flatMap(dt=>activities[dt]||[]);
+  if(!all.length||!all.every(a=>a.done)) return false;
+  const key=`${period}_${period==='day'?today:period==='week'?getMondayOf(today):period==='month'?today.slice(0,7):today.slice(0,4)}`;
+  if(!gam.periodDone[key]) { gam.periodDone[key]=true; await saveGamData(gam); return true; }
+  return false;
+}
+
+async function renderRewards() {
+  const container=document.getElementById('rewardsContainer');
+  if(!container) return;
+  const gam=await getGamData();
+  const today=formatDate(new Date());
+  const pd=gam.periodDone||{};
+  const STREAK_STEPS=[1,5,10,25,50,100];
+
+  function streakItem(label,streak,total,color) {
+    const next=STREAK_STEPS.find(s=>s>streak)||100;
+    const prev=STREAK_STEPS.slice().reverse().find(s=>s<=streak)||0;
+    const pct=streak>=100?100:Math.round((streak-prev)/(next-prev)*100);
+    return `<div class="reward-item">
+      <div class="reward-icon ${streak>0?'':'locked'}">🔥</div>
+      <div class="reward-body">
+        <div class="reward-name ${streak>0?'':'locked'}">${label}</div>
+        <div class="reward-sub">Consecutivi: ${streak} · Totali: ${total}</div>
+        <div class="reward-bar-wrap"><div class="reward-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      </div>
+      <div class="streak-badge ${streak>0?'active':''}">${streak}</div>
+    </div>`;
+  }
+  function periodItem(label,icon,done) {
+    return `<div class="reward-item">
+      <div class="reward-icon ${done?'':'locked'}">${icon}</div>
+      <div class="reward-body">
+        <div class="reward-name ${done?'':'locked'}">${label}</div>
+        <div class="reward-sub">${done?'✓ Completato!':'Completa tutte le attività del periodo'}</div>
+      </div>
+    </div>`;
   }
 
-  const listEl = document.getElementById('activityList');
-  listEl.innerHTML = '';
+  const acts=await getActivities();
+  const actCounts=gam.actCounts||{};
+  const allTitles=[...new Set(Object.values(acts).flat().map(a=>a.titolo))];
+  let actHTML='';
+  allTitles.slice(0,10).forEach(titolo=>{
+    const key=titolo.toLowerCase().trim();
+    const count=actCounts[key]||0;
+    const cur=TIER_STEPS.slice().reverse().find(t=>count>=t.n);
+    const nxt=TIER_STEPS.find(t=>t.n>count);
+    const pct=nxt?Math.round(((count-(cur?.n||0))/(nxt.n-(cur?.n||0)))*100):100;
+    actHTML+=`<div class="reward-item">
+      <div class="reward-icon"><span class="${cur?.cls||''}">${cur?cur.icon:'🎯'}</span></div>
+      <div class="reward-body">
+        <div class="reward-name">${escapeHtml(titolo)}</div>
+        <div class="reward-sub">${nxt?`${count}/${nxt.n} → ${nxt.name}`:`${count} · Challenger! 👑`}</div>
+        <div class="reward-bar-wrap"><div class="reward-bar-fill" style="width:${pct}%;background:${cur?.bar||'#a09890'}"></div></div>
+      </div>
+    </div>`;
+  });
+  if(!actHTML) actHTML='<p style="font-size:.73rem;color:var(--text-muted);padding:4px 0">Completa attività per sbloccare rank</p>';
 
-  if (dayActs.length === 0) {
-    listEl.innerHTML = '<p class="empty-state">Nessuna attività per questo giorno.<br>Aggiungila con il form qui sotto.</p>';
+  container.innerHTML=`
+    <div class="rewards-group"><div class="rewards-group-title">🔥 Streak accessi</div>${streakItem('Accesso quotidiano',gam.accessStreak||0,gam.accessTotal||0,'#b5804f')}</div>
+    <div class="rewards-group"><div class="rewards-group-title">📋 Streak riepilogo</div>${streakItem('Riepilogo giornata',gam.summaryStreak||0,gam.summaryTotal||0,'#5b8fa8')}</div>
+    <div class="rewards-group">
+      <div class="rewards-group-title">✅ Completamenti periodo</div>
+      ${periodItem('Giornata perfetta','☀️',!!pd[`day_${today}`])}
+      ${periodItem('Settimana perfetta','📅',!!pd[`week_${getMondayOf(today)}`])}
+      ${periodItem('Mese perfetto','🗓️',!!pd[`month_${today.slice(0,7)}`])}
+      ${periodItem('Anno perfetto','🎆',!!pd[`year_${today.slice(0,4)}`])}
+    </div>
+    <div class="rewards-group"><div class="rewards-group-title">🏅 Rank attività</div>${actHTML}</div>`;
+}
+
+/* ══════════════════════════════════════════════════════
+   LIBRERIA
+   ══════════════════════════════════════════════════════ */
+async function addToLibrary(act) {
+  const lib=await getLibrary();
+  if(lib.find(a=>a.titolo.toLowerCase()===act.titolo.toLowerCase())) return false;
+  lib.push({id:uid(),titolo:act.titolo,categoria:act.categoria,orario:act.orario,durata:act.durata,note:act.note||''});
+  await saveLibrary(lib);
+  return true;
+}
+
+async function renderLibrary() {
+  const list=document.getElementById('libraryList');
+  if(!list) return;
+  const lib=await getLibrary();
+  list.innerHTML='';
+  if(!lib.length) {
+    list.innerHTML='<p style="font-size:.75rem;color:var(--text-muted);text-align:center;padding:8px 0">Nessuna attività.<br>Crea e spunta «Salva in libreria».</p>';
     return;
   }
-
-  dayActs.forEach(act => listEl.appendChild(createActivityCard(act, selectedDate)));
-}
-
-function createActivityCard(act, dateStr) {
-  const card = document.createElement('div');
-  card.className = 'activity-card' + (act.done ? ' done' : '');
-
-  const catDef = getCategoryDef(act.categoria);
-  const pal    = getPalette(catDef.color);
-  const emoji  = catDef.emoji;
-  const dur    = act.durata ? `${act.durata} min` : '';
-
-  // Colored left border from category
-  if (!act.done) card.style.borderLeftColor = pal.border;
-
-  const recLabel = { 'giornaliera': '↻ ogni giorno', 'feriali': '↻ feriali', 'weekend': '↻ weekend' };
-  const recBadge = act.ripetizione && act.ripetizione !== 'nessuna'
-    ? `<span class="recurrence-badge">${recLabel[act.ripetizione] || ''}</span>` : '';
-
-  // Category badge colored
-  const catBadgeStyle = `background:${pal.bg};color:${pal.text};border:1px solid ${pal.border};`;
-  card.innerHTML = `
-    <div class="act-check">${act.done ? '✓' : ''}</div>
-    <div class="activity-card-body">
-      <div class="activity-title">${escapeHtml(act.titolo)}</div>
-      <div class="activity-meta">
-        <span class="activity-time">${act.orario || '--:--'}</span>
-        ${dur ? `<span>· ${dur}</span>` : ''}
-        <span class="cat-chip" style="${catBadgeStyle};padding:1px 7px;font-size:.68rem;">${emoji} ${escapeHtml(act.categoria)}</span>
-        ${recBadge}
+  for(const act of lib) {
+    const catDef=await getCategoryDef(act.categoria);
+    const pal=getPalette(catDef.color);
+    const item=document.createElement('div');
+    item.className='library-item'; item.dataset.id=act.id;
+    item.innerHTML=`
+      <span class="library-item-emoji">${catDef.emoji}</span>
+      <div class="library-item-body">
+        <div class="library-item-name">${escapeHtml(act.titolo)}</div>
+        <div class="library-item-meta">${act.orario||'--'} · ${act.durata?act.durata+'min':'—'} · ${escapeHtml(act.categoria)}</div>
       </div>
-      ${act.note ? `<div class="activity-note-small">${escapeHtml(act.note)}</div>` : ''}
-    </div>
-    <button class="btn-delete" title="Elimina">✕</button>
-  `;
-
-  card.addEventListener('click', (e) => {
-    if (e.target.classList.contains('btn-delete')) return;
-    toggleActivityDone(dateStr, act.id);
-  });
-  card.querySelector('.btn-delete').addEventListener('click', (e) => {
-    e.stopPropagation();
-    deleteActivity(dateStr, act.id);
-  });
-
-  return card;
-}
-
-function toggleActivityDone(dateStr, actId) {
-  const all = getActivities();
-  if (!all[dateStr]) return;
-  const act = all[dateStr].find(a => a.id === actId);
-  if (!act) return;
-  act.done = !act.done;
-  saveActivities(all);
-  renderDayDetail();
-  renderCalendar();
-
-  if (act.done) {
-    // Rank attività
-    const { count, newTier } = recordActivityCompletion(act.titolo);
-    if (newTier) {
-      setTimeout(() => showRewardToast(newTier.icon, `${newTier.name}! "${act.titolo}" — ${count} completamenti`), 400);
-    }
-    // Periodo
-    const periods = ['day','week','month','year'];
-    const periodLabels = { day:'Giornata perfetta ☀️', week:'Settimana perfetta 📅', month:'Mese perfetto 🗓️', year:'Anno perfetto 🎆' };
-    for (const p of periods) {
-      if (checkPeriodCompletion(p)) {
-        setTimeout(() => showRewardToast('🏆', periodLabels[p] + ' — tutte completate!'), newTier ? 2000 : 600);
-        break;
-      }
-    }
-    renderRewards();
-    showToast('✓ Completata!');
-  } else {
-    renderRewards();
-    showToast('Rimarcata come da fare');
+      <button class="library-item-del" title="Rimuovi">✕</button>`;
+    item.addEventListener('click', async e => {
+      if(e.target.classList.contains('library-item-del')) return;
+      prefillFormFromLibrary(act);
+    });
+    item.querySelector('.library-item-del').addEventListener('click', async e => {
+      e.stopPropagation();
+      const lib2=(await getLibrary()).filter(a=>a.id!==act.id);
+      await saveLibrary(lib2);
+      await renderLibrary();
+      showToast('Rimossa dalla libreria');
+    });
+    list.appendChild(item);
   }
 }
 
-/* Genera le date in base alla ripetizione */
-function generateDates(dataInizio, ripetizione, dataFine) {
-  const dates = [];
-  const start = new Date(dataInizio + 'T12:00:00');
-  if (ripetizione === 'nessuna' || !dataFine) {
-    dates.push(dataInizio);
-    return dates;
-  }
-  const end = new Date(dataFine + 'T12:00:00');
-  const cur = new Date(start);
-  while (cur <= end) {
-    const dow = cur.getDay(); // 0=Dom,1=Lun,...,6=Sab
-    if (ripetizione === 'giornaliera') {
-      dates.push(formatDate(cur));
-    } else if (ripetizione === 'feriali' && dow >= 1 && dow <= 5) {
-      dates.push(formatDate(cur));
-    } else if (ripetizione === 'weekend' && (dow === 0 || dow === 6)) {
-      dates.push(formatDate(cur));
-    }
-    cur.setDate(cur.getDate() + 1);
-  }
-  return dates;
+function prefillFormFromLibrary(act) {
+  document.getElementById('activityFormCard').classList.remove('form-card--collapsed');
+  document.getElementById('activityFormCard').classList.add('form-card--open');
+  document.getElementById('btnOpenForm').style.display='none';
+  document.getElementById('actTitolo').value=act.titolo;
+  document.getElementById('actOrario').value=act.orario||'08:00';
+  document.getElementById('actDurata').value=act.durata||'';
+  document.getElementById('actNote').value=act.note||'';
+  document.getElementById('actDataInizio').value=state.selectedDate;
+  document.querySelectorAll('.cat-chip').forEach(ch=>ch.classList.toggle('selected',ch.dataset.name===act.categoria));
+  showToast(`📚 "${act.titolo}" caricata`);
 }
 
-function addActivity(dateStr, activity) {
-  const all = getActivities();
-  // Se l'attività ha ripetizione, usa dataInizio e genera tutte le date
-  const startDate = activity.dataInizio || dateStr;
-  const dates = generateDates(startDate, activity.ripetizione || 'nessuna', activity.dataFine);
-  const groupId = uid(); // ID condiviso per il gruppo di ripetizioni
-  dates.forEach(d => {
-    if (!all[d]) all[d] = [];
-    all[d].push({ ...activity, id: uid(), groupId: dates.length > 1 ? groupId : undefined, done: false });
-  });
-  saveActivities(all);
-  renderDayDetail();
-  renderCalendar();
-}
-
-function deleteActivity(dateStr, actId) {
-  const all = getActivities();
-  if (!all[dateStr]) return;
-  all[dateStr] = all[dateStr].filter(a => a.id !== actId);
-  if (all[dateStr].length === 0) delete all[dateStr];
-  saveActivities(all);
-  renderDayDetail();
-  renderCalendar();
-  showToast('Attività eliminata');
-}
-
-function getFormActivity() {
-  const titolo = document.getElementById('actTitolo').value.trim();
-  if (!titolo) { showToast('⚠ Inserisci un titolo'); return null; }
-  const dataInizio = document.getElementById('actDataInizio').value;
-  if (!dataInizio) { showToast('⚠ Seleziona una data di inizio'); return null; }
-  const ripetizione = document.querySelector('input[name="recurrence"]:checked').value;
-  const dataFine = ripetizione !== 'nessuna' ? document.getElementById('actDataFine').value : null;
-  if (ripetizione !== 'nessuna' && !dataFine) { showToast('⚠ Seleziona la data di fine ripetizione'); return null; }
-  if (dataFine && dataFine < dataInizio) { showToast('⚠ La data di fine deve essere dopo quella di inizio'); return null; }
-  return {
-    titolo,
-    categoria:  document.getElementById('actCategoria').value,
-    orario:     document.getElementById('actOrario').value || '09:00',
-    durata:     parseInt(document.getElementById('actDurata').value) || 0,
-    note:       document.getElementById('actNote').value.trim(),
-    dataInizio,
-    ripetizione,
-    dataFine,
-  };
-}
-
-function resetActivityForm() {
-  document.getElementById('actTitolo').value = '';
-  document.getElementById('actDurata').value = '';
-  document.getElementById('actNote').value   = '';
-  document.getElementById('actOrario').value = '08:00';
-  document.getElementById('actDataInizio').value = state.selectedDate;
-  document.getElementById('actDataFine').value   = '';
-  document.getElementById('actDataFine').style.display = 'none';
-  document.getElementById('actDataFineLabel').style.display = 'none';
-  const nessuna = document.querySelector('input[name="recurrence"][value="nessuna"]');
-  if (nessuna) nessuna.checked = true;
-  // deselect category chips
-  document.querySelectorAll('.cat-chip').forEach(ch => ch.classList.remove('selected'));
-}
-
-/* ── Category picker rendering ── */
-function renderCatPicker() {
-  const picker = document.getElementById('catPicker');
-  if (!picker) return;
-  picker.innerHTML = '';
-  getCategories().forEach(cat => {
-    const pal   = getPalette(cat.color);
-    const chip  = document.createElement('div');
-    chip.className = 'cat-chip';
-    chip.dataset.name = cat.name;
-    chip.style.background = pal.bg;
-    chip.style.color = pal.text;
-    chip.innerHTML = `${cat.emoji} ${cat.name}`;
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
+/* ══════════════════════════════════════════════════════
+   CATEGORIA PICKER
+   ══════════════════════════════════════════════════════ */
+async function renderCatPicker() {
+  const picker=document.getElementById('catPicker');
+  if(!picker) return;
+  const cats=await getCategories();
+  picker.innerHTML='';
+  cats.forEach(cat=>{
+    const pal=getPalette(cat.color);
+    const chip=document.createElement('div');
+    chip.className='cat-chip'; chip.dataset.name=cat.name;
+    chip.style.background=pal.bg; chip.style.color=pal.text;
+    chip.innerHTML=`${cat.emoji} ${cat.name}`;
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('selected'));
       chip.classList.add('selected');
     });
     picker.appendChild(chip);
   });
 }
 
-/* ── Color picker for new category ── */
 function renderColorPicker(selectedId) {
-  const picker = document.getElementById('colorPicker');
-  if (!picker) return;
-  picker.innerHTML = '';
-  COLOR_PALETTE.forEach(pal => {
-    const sw = document.createElement('div');
-    sw.className = 'color-swatch' + (pal.id === selectedId ? ' selected' : '');
-    sw.style.background = pal.border;
-    sw.title = pal.label;
-    sw.dataset.id = pal.id;
-    sw.addEventListener('click', () => {
-      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  const picker=document.getElementById('colorPicker');
+  if(!picker) return;
+  picker.innerHTML='';
+  COLOR_PALETTE.forEach(pal=>{
+    const sw=document.createElement('div');
+    sw.className='color-swatch'+(pal.id===selectedId?' selected':'');
+    sw.style.background=pal.border; sw.title=pal.label; sw.dataset.id=pal.id;
+    sw.addEventListener('click',()=>{
+      document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('selected'));
       sw.classList.add('selected');
     });
     picker.appendChild(sw);
   });
 }
 
-/* ══════════════════════════════════════
-   SALUTE & GRAFICI
-   ══════════════════════════════════════ */
-function getLastNDays(n) {
-  const days = [];
-  for (let i = n - 1; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
-    days.push(formatDate(d));
-  }
-  return days;
+function getSelectedCategory() {
+  const chip=document.querySelector('.cat-chip.selected');
+  return chip?chip.dataset.name:null;
 }
 
-/* Media ignorando i null */
-function calcAvg(arr) {
-  const valid = arr.filter(v => v !== null && v !== undefined);
-  if (!valid.length) return null;
-  return (valid.reduce((s, v) => s + v, 0) / valid.length).toFixed(1);
-}
-
+/* ══════════════════════════════════════════════════════
+   SALUTE
+   ══════════════════════════════════════════════════════ */
 function miniChartOptions(maxY) {
   return {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { enabled: true } },
-    scales: {
-      x: { display: false },
-      y: { display: false, min: 0, max: maxY || 10, grid: { display: false } }
-    },
-    elements: {
-      point: { radius: 2, hoverRadius: 4 },
-      line:  { tension: 0.4, borderWidth: 2, fill: true },
-    },
-    animation: { duration: 300 },
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{enabled:true}},
+    scales:{x:{display:false},y:{display:false,min:0,max:maxY,grid:{display:false}}},
+    elements:{point:{radius:2,hoverRadius:4},line:{tension:0.4,borderWidth:2,fill:true}},
+    animation:{duration:300},
   };
 }
-
-function upsertChart(key, canvasId, labels, data, color, maxY) {
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  const gradient = ctx.createLinearGradient(0, 0, 0, 48);
-  gradient.addColorStop(0, color + '55');
-  gradient.addColorStop(1, color + '05');
-
-  if (charts[key]) {
-    charts[key].data.labels = labels;
-    charts[key].data.datasets[0].data = data;
-    charts[key].update();
-  } else {
-    charts[key] = new Chart(ctx, {
-      type: 'line',
-      data: { labels, datasets: [{ data, borderColor: color, backgroundColor: gradient, pointBackgroundColor: color }] },
-      options: miniChartOptions(maxY),
-    });
-  }
+function upsertChart(key,canvasId,labels,data,color,maxY) {
+  const ctx=document.getElementById(canvasId).getContext('2d');
+  const gradient=ctx.createLinearGradient(0,0,0,48);
+  gradient.addColorStop(0,color+'55'); gradient.addColorStop(1,color+'05');
+  if(charts[key]) { charts[key].data.labels=labels; charts[key].data.datasets[0].data=data; charts[key].update(); }
+  else charts[key]=new Chart(ctx,{type:'line',data:{labels,datasets:[{data,borderColor:color,backgroundColor:gradient,pointBackgroundColor:color}]},options:miniChartOptions(maxY)});
 }
 
-/* ── Algoritmo punteggio passi ──────────────────────────────
-   Obiettivo base: 8000 passi = 100 punti
-   Scala: lineare fino a 8000, bonus oltre
-     0–2999   → rosso    (0–37 pt)
-     3000–5999 → arancio  (38–74 pt)
-     6000–7999 → giallo   (75–99 pt)
-     8000+    → verde    (100+ pt, max display 120)
-   Formula: min(round(passi / 80), 120)
-──────────────────────────────────────────────────────────── */
-function stepsScore(passi) {
-  if (!passi || passi < 0) return 0;
-  return Math.min(Math.round(passi / 80), 120);
-}
-function stepsColor(score) {
-  if (score >= 100) return { bar: '#4ab888', label: '🟢 Ottimo!' };
-  if (score >= 75)  return { bar: '#c9a84c', label: '🟡 Quasi!' };
-  if (score >= 38)  return { bar: '#d97060', label: '🟠 Continua' };
-  return { bar: '#c0614a', label: '🔴 Muoviti!' };
-}
-function stepsLabel(passi, score) {
-  const fmtPassi = passi ? passi.toLocaleString('it-IT') : '0';
-  return `${fmtPassi} passi`;
-}
+async function renderHealthSection() {
+  const health=await getHealthData();
+  const days=getLastNDays(7);
+  const labels=days.map(d=>new Date(d+'T12:00:00').getDate());
+  const sonnoData=days.map(d=>health[d]?.sonno??null);
+  const passiData=days.map(d=>health[d]?.passi??null);
+  const today=formatDate(new Date());
+  const th=health[today];
 
-function renderHealthSection() {
-  const health = getHealthData();
-  const days   = getLastNDays(7);
-  const labels = days.map(d => new Date(d + 'T12:00:00').getDate());
+  document.getElementById('valSonno').textContent=th?.sonno?th.sonno+'h':'—';
+  document.getElementById('valPassi').textContent=th?.passi?th.passi.toLocaleString('it-IT'):'—';
+  const avgO=calcAvg(sonnoData), avgP=calcAvg(passiData);
+  document.getElementById('avgSonno').textContent=avgO?avgO+'h':'—';
+  document.getElementById('avgPassi').textContent=avgP?Math.round(avgP).toLocaleString('it-IT'):'—';
 
-  const sonnoData = days.map(d => health[d]?.sonno ?? null);
-  const passiData = days.map(d => health[d]?.passi ?? null);
+  const scoreBlock=document.getElementById('stepsScoreBlock');
+  if(th?.passi!=null) {
+    const score=stepsScore(th.passi);
+    const {bar,label}=stepsColor(score);
+    document.getElementById('stepsScoreFill').style.width=Math.min(score/120*100,100)+'%';
+    document.getElementById('stepsScoreFill').style.background=bar;
+    document.getElementById('stepsScoreLabel').innerHTML=`<span>${th.passi.toLocaleString('it-IT')} passi</span><span style="color:${bar}">${score} pt · ${label}</span>`;
+    scoreBlock.style.display='block';
+  } else { scoreBlock.style.display='none'; }
 
-  /* Valore oggi */
-  const today = formatDate(new Date());
-  const th    = health[today];
-  document.getElementById('valSonno').textContent = th?.sonno ? th.sonno + 'h' : '—';
-  document.getElementById('valPassi').textContent = th?.passi ? th.passi.toLocaleString('it-IT') : '—';
+  const dateEl=document.getElementById('healthFormDate');
+  if(dateEl) dateEl.textContent=new Date().toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'});
 
-  /* Medie */
-  const avgO = calcAvg(sonnoData);
-  const avgP = calcAvg(passiData);
-  document.getElementById('avgSonno').textContent = avgO !== null ? avgO + 'h' : '—';
-  document.getElementById('avgPassi').textContent = avgP !== null ? Math.round(avgP).toLocaleString('it-IT') : '—';
+  const reminder=document.getElementById('dailyReminder');
+  if(reminder) reminder.style.display=(!th||th.sonno==null&&th.passi==null)?'block':'none';
 
-  /* Barra punteggio passi oggi */
-  const scoreBlock = document.getElementById('stepsScoreBlock');
-  if (th?.passi != null) {
-    const score = stepsScore(th.passi);
-    const { bar, label } = stepsColor(score);
-    const pct = Math.min(score / 120 * 100, 100);
-    document.getElementById('stepsScoreFill').style.width      = pct + '%';
-    document.getElementById('stepsScoreFill').style.background = bar;
-    document.getElementById('stepsScoreLabel').innerHTML =
-      `<span>${stepsLabel(th.passi, score)}</span><span style="color:${bar}">${score} pt · ${label}</span>`;
-    scoreBlock.style.display = 'block';
-  } else {
-    scoreBlock.style.display = 'none';
+  if(th) {
+    if(th.sonno!=null) document.getElementById('inputSonno').value=th.sonno;
+    if(th.passi!=null) document.getElementById('inputPassi').value=th.passi;
   }
-
-  /* Pre-compila form */
-  if (th) {
-    if (th.sonno != null) document.getElementById('inputSonno').value = th.sonno;
-    if (th.passi != null) document.getElementById('inputPassi').value = th.passi;
-  }
-
-  /* Data nel titolo form */
-  const dateEl = document.getElementById('healthFormDate');
-  if (dateEl) {
-    dateEl.textContent = new Date().toLocaleDateString('it-IT', { weekday:'short', day:'numeric', month:'short' });
-  }
-
-  /* Promemoria dati mancanti */
-  const reminder = document.getElementById('dailyReminder');
-  if (reminder) reminder.style.display = (!th || (th.sonno == null && th.passi == null)) ? 'block' : 'none';
-
-  upsertChart('sonno', 'chartSonno', labels, sonnoData, '#5b8fa8', 12);
-  upsertChart('passi', 'chartPassi', labels, passiData, '#6b9e78', 15000);
+  upsertChart('sonno','chartSonno',labels,sonnoData,'#5b8fa8',12);
+  upsertChart('passi','chartPassi',labels,passiData,'#6b9e78',15000);
 }
 
-function saveHealthToday() {
-  const sonno = parseFloat(document.getElementById('inputSonno').value);
-  const passi = parseInt(document.getElementById('inputPassi').value);
-  if (isNaN(sonno) && isNaN(passi)) {
-    showToast('⚠ Inserisci almeno un valore'); return;
-  }
-  const health  = getHealthData();
-  const today   = formatDate(new Date());
-  health[today] = {
-    sonno: isNaN(sonno) ? health[today]?.sonno ?? null : sonno,
-    passi: isNaN(passi) ? health[today]?.passi ?? null : passi,
+async function saveHealthToday() {
+  const sonno=parseFloat(document.getElementById('inputSonno').value);
+  const passi=parseInt(document.getElementById('inputPassi').value);
+  if(isNaN(sonno)&&isNaN(passi)) { showToast('⚠ Inserisci almeno un valore'); return; }
+  const health=await getHealthData();
+  const today=formatDate(new Date());
+  health[today]={
+    sonno:isNaN(sonno)?health[today]?.sonno??null:sonno,
+    passi:isNaN(passi)?health[today]?.passi??null:passi,
   };
-  saveHealthData(health);
-  renderHealthSection();
-  const score = !isNaN(passi) ? ` · ${stepsScore(passi)} pt` : '';
-  showToast('✓ Dati salvati' + score);
-
-  // Gamification: streak riepilogo
-  const { streak, isNew } = recordDailySummary();
-  renderRewards();
-  if (isNew) {
-    const milestoneLabels = {1:'Primo riepilogo! 🌱', 5:'5 riepiloghi di fila 🔥', 10:'10 giorni consecutivi! ⚡', 25:'25 giorni — sei costante! 💪', 50:'50 giorni di fila 🏅', 100:'100 riepiloghi! Leggenda 👑'};
-    setTimeout(() => showRewardToast('📋', milestoneLabels[streak] || `${streak} riepiloghi consecutivi!`), 600);
+  await saveHealthData(health);
+  await renderHealthSection();
+  const score=!isNaN(passi)?` · ${stepsScore(passi)} pt`:'';
+  showToast('✓ Dati salvati'+score);
+  const {streak,isNew}=await recordDailySummary();
+  await renderRewards();
+  if(isNew) {
+    const lbl={1:'Primo riepilogo! 🌱',5:'5 riepiloghi di fila 🔥',10:'10 giorni consecutivi ⚡',25:'25 giorni — sei costante! 💪',50:'50 giorni 🏅',100:'100 riepiloghi! Leggenda 👑'};
+    setTimeout(()=>showRewardToast('📋',lbl[streak]||`${streak} consecutivi!`),600);
   }
 }
 
-/* ── Demo data ── */
-function maybeInsertDemoData() {
-  const activities = getActivities();
-  const health     = getHealthData();
-  if (Object.keys(activities).length > 0 || Object.keys(health).length > 0) return;
-
-  const today = new Date();
-  for (let i = 4; i >= 0; i--) {
-    const d = new Date(today); d.setDate(d.getDate() - i);
-    const ds = formatDate(d);
-    const n = 2 + Math.floor(Math.random() * 3);
-    const shuffled = DEMO_ACTIVITIES.slice().sort(() => Math.random() - .5);
-    // giorni passati: attività parzialmente completate; oggi: tutte da fare
-    activities[ds] = shuffled.slice(0, n).map(a => ({
-      ...a, id: uid(), done: i > 0 ? Math.random() > 0.35 : false
-    }));
-  }
-
-  const oBase = [7,7.5,6,8,7,6.5,7.5];
-  const pBase = [9200,6800,11000,7400,8500,5200,10300];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(today); d.setDate(d.getDate() - i);
-    health[formatDate(d)] = { sonno: oBase[6-i], passi: pBase[6-i] };
-  }
-
-  saveActivities(activities);
-  saveHealthData(health);
-
-  // Libreria demo
-  if (getLibrary().length === 0) {
-    const demoLib = [
-      { id: uid(), titolo: 'Mobilità mattina',    categoria: 'Mobilità',       orario: '07:00', durata: 20, note: 'Stretching e respiro diaframmatico' },
-      { id: uid(), titolo: 'Allenamento casa',    categoria: 'Allenamento',    orario: '17:30', durata: 45, note: 'Corpo libero: squat, push-up, core' },
-      { id: uid(), titolo: 'Bici / camminata',    categoria: 'Bici/Camminata', orario: '12:15', durata: 40, note: 'Giro al parco, passo moderato' },
-      { id: uid(), titolo: 'Camminata digestiva', categoria: 'Bici/Camminata', orario: '20:00', durata: 20, note: 'Dopo cena, passo lento' },
-      { id: uid(), titolo: 'Yoga mattutino',      categoria: 'Yoga',           orario: '07:30', durata: 30, note: '' },
-    ];
-    saveLibrary(demoLib);
+/* ══════════════════════════════════════════════════════
+   ATTIVITÀ
+   ══════════════════════════════════════════════════════ */
+async function toggleActivityDone(dateStr,actId) {
+  const all=await getActivities();
+  if(!all[dateStr]) return;
+  const act=all[dateStr].find(a=>a.id===actId);
+  if(!act) return;
+  act.done=!act.done;
+  await saveActivities(all);
+  await renderDayDetail();
+  await renderCalendar();
+  if(act.done) {
+    const {count,newTier}=await recordActivityCompletion(act.titolo);
+    if(newTier) setTimeout(()=>showRewardToast(newTier.icon,`${newTier.name}! "${act.titolo}" — ${count} completamenti`),400);
+    const pLabels={day:'Giornata perfetta ☀️',week:'Settimana perfetta 📅',month:'Mese perfetto 🗓️',year:'Anno perfetto 🎆'};
+    for(const p of ['day','week','month','year']) {
+      if(await checkPeriodCompletion(p)) { setTimeout(()=>showRewardToast('🏆',pLabels[p]+' — tutte completate!'),newTier?2000:600); break; }
+    }
+    await renderRewards();
+    showToast('✓ Completata!');
+  } else {
+    await renderRewards();
+    showToast('Rimarcata come da fare');
   }
 }
 
-/* ── Init ── */
-function init() {
-  maybeInsertDemoData();
+function generateDates(dataInizio,ripetizione,dataFine) {
+  const dates=[];
+  const start=new Date(dataInizio+'T12:00:00');
+  if(ripetizione==='nessuna'||!dataFine) { dates.push(dataInizio); return dates; }
+  const end=new Date(dataFine+'T12:00:00');
+  const cur=new Date(start);
+  while(cur<=end) {
+    const dow=cur.getDay();
+    if(ripetizione==='giornaliera') dates.push(formatDate(cur));
+    else if(ripetizione==='feriali'&&dow>=1&&dow<=5) dates.push(formatDate(cur));
+    else if(ripetizione==='weekend'&&(dow===0||dow===6)) dates.push(formatDate(cur));
+    cur.setDate(cur.getDate()+1);
+  }
+  return dates;
+}
+
+async function addActivity(dateStr,activity) {
+  const all=await getActivities();
+  const startDate=activity.dataInizio||dateStr;
+  const dates=generateDates(startDate,activity.ripetizione||'nessuna',activity.dataFine);
+  const groupId=uid();
+  dates.forEach(d=>{ if(!all[d]) all[d]=[]; all[d].push({...activity,id:uid(),groupId:dates.length>1?groupId:undefined,done:false}); });
+  await saveActivities(all);
+  await renderDayDetail();
+  await renderCalendar();
+}
+
+async function deleteActivity(dateStr,actId) {
+  const all=await getActivities();
+  if(!all[dateStr]) return;
+  all[dateStr]=all[dateStr].filter(a=>a.id!==actId);
+  if(!all[dateStr].length) delete all[dateStr];
+  await saveActivities(all);
+  await renderDayDetail();
+  await renderCalendar();
+  showToast('Attività eliminata');
+}
+
+function getFormActivity() {
+  const titolo=document.getElementById('actTitolo').value.trim();
+  if(!titolo) { showToast('⚠ Inserisci un titolo'); return null; }
+  const dataInizio=document.getElementById('actDataInizio').value;
+  if(!dataInizio) { showToast('⚠ Seleziona una data'); return null; }
+  const categoria=getSelectedCategory();
+  if(!categoria) { showToast('⚠ Seleziona una categoria'); return null; }
+  const ripetizione=document.querySelector('input[name="recurrence"]:checked').value;
+  const dataFine=ripetizione!=='nessuna'?document.getElementById('actDataFine').value:null;
+  if(ripetizione!=='nessuna'&&!dataFine) { showToast('⚠ Seleziona la data di fine'); return null; }
+  if(dataFine&&dataFine<dataInizio) { showToast('⚠ Data fine prima di inizio'); return null; }
+  return {titolo,categoria,orario:document.getElementById('actOrario').value||'09:00',durata:parseInt(document.getElementById('actDurata').value)||0,note:document.getElementById('actNote').value.trim(),dataInizio,ripetizione,dataFine};
+}
+
+function resetActivityForm() {
+  document.getElementById('actTitolo').value='';
+  document.getElementById('actDurata').value='';
+  document.getElementById('actNote').value='';
+  document.getElementById('actOrario').value='08:00';
+  document.getElementById('actDataInizio').value=state.selectedDate;
+  document.getElementById('actDataFine').value='';
+  document.getElementById('actDataFine').style.display='none';
+  document.getElementById('actDataFineLabel').style.display='none';
+  document.querySelector('input[name="recurrence"][value="nessuna"]').checked=true;
+  document.querySelectorAll('.cat-chip').forEach(ch=>ch.classList.remove('selected'));
+  librarySaveEnabled=false;
+  document.getElementById('librarySaveIcon').textContent='☐';
+}
+
+async function createActivityCard(act,dateStr) {
+  const card=document.createElement('div');
+  card.className='activity-card'+(act.done?' done':'');
+  const catDef=await getCategoryDef(act.categoria);
+  const pal=getPalette(catDef.color);
+  if(!act.done) card.style.borderLeftColor=pal.border;
+  const dur=act.durata?`${act.durata} min`:'';
+  const recLabel={giornaliera:'↻ ogni giorno',feriali:'↻ feriali',weekend:'↻ weekend'};
+  const recBadge=act.ripetizione&&act.ripetizione!=='nessuna'?`<span class="recurrence-badge">${recLabel[act.ripetizione]||''}</span>`:'';
+  const catBadgeStyle=`background:${pal.bg};color:${pal.text};border:1px solid ${pal.border};`;
+  card.innerHTML=`
+    <div class="act-check">${act.done?'✓':''}</div>
+    <div class="activity-card-body">
+      <div class="activity-title">${escapeHtml(act.titolo)}</div>
+      <div class="activity-meta">
+        <span class="activity-time">${act.orario||'--:--'}</span>
+        ${dur?`<span>· ${dur}</span>`:''}
+        <span class="cat-chip" style="${catBadgeStyle};padding:1px 7px;font-size:.68rem;">${catDef.emoji} ${escapeHtml(act.categoria)}</span>
+        ${recBadge}
+      </div>
+      ${act.note?`<div class="activity-note-small">${escapeHtml(act.note)}</div>`:''}
+    </div>
+    <button class="btn-delete" title="Elimina">✕</button>`;
+  card.addEventListener('click', async e=>{
+    if(e.target.classList.contains('btn-delete')) return;
+    await toggleActivityDone(dateStr,act.id);
+  });
+  card.querySelector('.btn-delete').addEventListener('click', async e=>{
+    e.stopPropagation();
+    await deleteActivity(dateStr,act.id);
+  });
+  return card;
+}
+
+async function renderDayDetail() {
+  const {selectedDate}=state;
+  const activities=await getActivities();
+  const dayActs=(activities[selectedDate]||[]).slice().sort((a,b)=>a.orario.localeCompare(b.orario));
+  document.getElementById('detailDateTitle').textContent=capitalize(formatDateDisplay(selectedDate));
+  const countEl=document.getElementById('detailActivityCount');
+  countEl.textContent=dayActs.length>0?`${dayActs.length} attività`:'';
+  const progressWrap=document.getElementById('detailProgress');
+  if(dayActs.length>0) {
+    const done=dayActs.filter(a=>a.done).length;
+    const pct=Math.round(done/dayActs.length*100);
+    document.getElementById('progressText').textContent=`${done} / ${dayActs.length} completate`;
+    document.getElementById('progressPct').textContent=`${pct}%`;
+    document.getElementById('progressFill').style.width=pct+'%';
+    progressWrap.style.display='block';
+  } else { progressWrap.style.display='none'; }
+  const listEl=document.getElementById('activityList');
+  listEl.innerHTML='';
+  if(!dayActs.length) { listEl.innerHTML='<p class="empty-state">Nessuna attività per questo giorno.<br>Aggiungila con il form qui sotto.</p>'; return; }
+  for(const act of dayActs) listEl.appendChild(await createActivityCard(act,selectedDate));
+}
+
+/* ══════════════════════════════════════════════════════
+   CALENDARIO
+   ══════════════════════════════════════════════════════ */
+async function renderCalendar() {
+  const {calView}=state;
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===calView));
+  if(calView==='giorno')         await renderViewDay();
+  else if(calView==='settimana') await renderViewWeek();
+  else                           await renderViewMonth();
+}
+
+async function buildDayCell(dateStr,day,today,selectedDate,activities,otherMonth) {
+  const cell=document.createElement('div');
+  cell.className='cal-day';
+  if(otherMonth)              cell.classList.add('cal-day--other-month');
+  if(dateStr===today)         cell.classList.add('cal-day--today');
+  if(dateStr===selectedDate)  cell.classList.add('cal-day--selected');
+  if(state.calView==='settimana') {
+    const mon=getMondayOf(selectedDate), sun=addDays(mon,6);
+    if(dateStr>=mon&&dateStr<=sun&&dateStr!==selectedDate) cell.classList.add('cal-day--in-week');
+    if(dateStr===mon) cell.classList.add('cal-day--week-start');
+    if(dateStr===sun) cell.classList.add('cal-day--week-end');
+  }
+  const numEl=document.createElement('div'); numEl.className='cal-day-num'; numEl.textContent=day;
+  cell.appendChild(numEl);
+  const dayActs=(activities[dateStr]||[]).slice().sort((a,b)=>a.orario.localeCompare(b.orario));
+  if(dayActs.length>0) {
+    const listEl=document.createElement('div'); listEl.className='cal-activity-list';
+    const MAX=state.calView==='mese'?2:state.calView==='settimana'?10:4;
+    for(const act of dayActs.slice(0,MAX)) {
+      const pill=document.createElement('div');
+      pill.className='cal-activity-pill'+(act.done?' done':'');
+      const catDef=await getCategoryDef(act.categoria);
+      const pal=getPalette(catDef.color);
+      if(!act.done) { pill.style.background=pal.bg; pill.style.color=pal.text; pill.style.borderColor=pal.border; }
+      pill.textContent=`${catDef.emoji} ${act.titolo}`;
+      pill.title=`${act.orario} · ${act.titolo}${act.done?' ✓':''}`;
+      pill.addEventListener('click', async e=>{ e.stopPropagation(); await toggleActivityDone(dateStr,act.id); });
+      listEl.appendChild(pill);
+    }
+    if(dayActs.length>MAX) { const m=document.createElement('div'); m.className='cal-more'; m.textContent=`+${dayActs.length-MAX} altre`; listEl.appendChild(m); }
+    cell.appendChild(listEl);
+  }
+  cell.addEventListener('click', async ()=>{
+    state.selectedDate=dateStr;
+    document.getElementById('actDataInizio').value=dateStr;
+    await renderCalendar();
+    await renderDayDetail();
+  });
+  return cell;
+}
+
+async function renderViewDay() {
+  const {selectedDate}=state;
+  const today=formatDate(new Date());
+  const activities=await getActivities();
+  document.getElementById('calTitle').textContent=capitalize(new Date(selectedDate+'T12:00:00').toLocaleDateString(LOCALE,{weekday:'long',day:'numeric',month:'long',year:'numeric'}));
+  document.getElementById('calWeekdays').style.display='none';
+  const grid=document.getElementById('calendarGrid');
+  grid.className='day-view'; grid.innerHTML='';
+  const hdr=document.createElement('div');
+  hdr.className='day-view-header'+(selectedDate===today?' today-header':'');
+  hdr.textContent=selectedDate===today?'Oggi':capitalize(new Date(selectedDate+'T12:00:00').toLocaleDateString(LOCALE,{weekday:'long',day:'numeric',month:'long'}));
+  grid.appendChild(hdr);
+  const timeline=document.createElement('div'); timeline.className='day-timeline';
+  const dayActs=(activities[selectedDate]||[]).slice().sort((a,b)=>a.orario.localeCompare(b.orario));
+  for(const h of WEEK_HOURS) {
+    const row=document.createElement('div'); row.className='day-hour-row';
+    const lbl=document.createElement('div'); lbl.className='day-hour-label'; lbl.textContent=h+':00';
+    row.appendChild(lbl);
+    const wrap=document.createElement('div'); wrap.className='day-hour-activities';
+    for(const act of dayActs.filter(a=>parseInt((a.orario||'00:00').split(':')[0])===h)) {
+      const block=document.createElement('div');
+      block.className='day-act-block'+(act.done?' done':'');
+      const catDef=await getCategoryDef(act.categoria);
+      const pal=getPalette(catDef.color);
+      if(!act.done) { block.style.background=pal.bg; block.style.color=pal.text; block.style.borderLeftColor=pal.border; }
+      const dur=act.durata?` · ${act.durata} min`:'';
+      block.innerHTML=`<div class="day-act-block-title">${catDef.emoji} ${escapeHtml(act.titolo)}</div><div class="day-act-block-meta">${act.orario}${dur} · ${escapeHtml(act.categoria)}</div>`;
+      block.addEventListener('click', async ()=>await toggleActivityDone(selectedDate,act.id));
+      wrap.appendChild(block);
+    }
+    row.appendChild(wrap); timeline.appendChild(row);
+  }
+  grid.appendChild(timeline);
+}
+
+async function renderViewWeek() {
+  const {selectedDate}=state;
+  const today=formatDate(new Date());
+  const activities=await getActivities();
+  const monday=getMondayOf(selectedDate);
+  const monD=new Date(monday+'T12:00:00'), sunD=new Date(addDays(monday,6)+'T12:00:00');
+  const fmtD=d=>d.toLocaleDateString(LOCALE,{day:'numeric',month:'short'});
+  document.getElementById('calTitle').textContent=`${fmtD(monD)} – ${fmtD(sunD)} ${sunD.getFullYear()}`;
+  document.getElementById('calWeekdays').style.display='none';
+  const grid=document.getElementById('calendarGrid');
+  grid.className='cal-view-week'; grid.innerHTML='';
+  const wrap=document.createElement('div'); wrap.className='cal-view-week-wrap';
+  const timeCol=document.createElement('div'); timeCol.className='week-time-col';
+  WEEK_HOURS.forEach(h=>{ const s=document.createElement('div'); s.className='week-time-slot'; s.textContent=h+':00'; timeCol.appendChild(s); });
+  wrap.appendChild(timeCol);
+  const daysGrid=document.createElement('div'); daysGrid.className='week-days-grid';
+  for(let i=0;i<7;i++) {
+    const dateStr=addDays(monday,i);
+    const d=new Date(dateStr+'T12:00:00');
+    const isToday=dateStr===today, isSel=dateStr===selectedDate;
+    const dayActs=(activities[dateStr]||[]).slice().sort((a,b)=>a.orario.localeCompare(b.orario));
+    const col=document.createElement('div'); col.className='week-day-col';
+    const hdr=document.createElement('div');
+    hdr.className='week-day-header'+(isToday?' today-col':'')+(isSel?' selected-col':'');
+    hdr.textContent=`${DAY_NAMES_SHORT[i]} ${d.getDate()}`;
+    col.appendChild(hdr);
+    const body=document.createElement('div');
+    body.className='week-day-body'+(isToday?' today-body':'')+(isSel?' selected-body':'');
+    body.addEventListener('click', async ()=>{ state.selectedDate=dateStr; document.getElementById('actDataInizio').value=dateStr; await renderCalendar(); await renderDayDetail(); });
+    for(const h of WEEK_HOURS) {
+      const slot=document.createElement('div'); slot.className='week-hour-slot';
+      for(const act of dayActs.filter(a=>parseInt((a.orario||'00:00').split(':')[0])===h)) {
+        const pill=document.createElement('div');
+        pill.className='week-act-pill'+(act.done?' done':'');
+        const catDef=await getCategoryDef(act.categoria);
+        const pal=getPalette(catDef.color);
+        if(!act.done) { pill.style.background=pal.bg; pill.style.color=pal.text; pill.style.borderColor=pal.border; }
+        pill.textContent=`${act.orario} ${catDef.emoji} ${act.titolo}`;
+        pill.addEventListener('click', async e=>{ e.stopPropagation(); await toggleActivityDone(dateStr,act.id); });
+        slot.appendChild(pill);
+      }
+      body.appendChild(slot);
+    }
+    col.appendChild(body); daysGrid.appendChild(col);
+  }
+  wrap.appendChild(daysGrid); grid.appendChild(wrap);
+}
+
+async function renderViewMonth() {
+  const {currentYear,currentMonth,selectedDate}=state;
+  const today=formatDate(new Date());
+  const activities=await getActivities();
+  document.getElementById('calTitle').textContent=capitalize(new Date(currentYear,currentMonth,1).toLocaleDateString(LOCALE,{month:'long',year:'numeric'}));
+  document.getElementById('calWeekdays').style.display='';
+  const grid=document.getElementById('calendarGrid');
+  grid.className='calendar-grid cal-view-month'; grid.innerHTML='';
+  const firstDay=new Date(currentYear,currentMonth,1).getDay();
+  const startOffset=firstDay===0?6:firstDay-1;
+  const daysInMonth=new Date(currentYear,currentMonth+1,0).getDate();
+  const prevDays=new Date(currentYear,currentMonth,0).getDate();
+  const total=Math.ceil((startOffset+daysInMonth)/7)*7;
+  for(let i=0;i<total;i++) {
+    let day,dateStr,other=false;
+    if(i<startOffset) { day=prevDays-startOffset+i+1; const pm=currentMonth===0?11:currentMonth-1,py=currentMonth===0?currentYear-1:currentYear; dateStr=`${py}-${String(pm+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`; other=true; }
+    else if(i>=startOffset+daysInMonth) { day=i-startOffset-daysInMonth+1; const nm=currentMonth===11?0:currentMonth+1,ny=currentMonth===11?currentYear+1:currentYear; dateStr=`${ny}-${String(nm+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`; other=true; }
+    else { day=i-startOffset+1; dateStr=`${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`; }
+    grid.appendChild(await buildDayCell(dateStr,day,today,selectedDate,activities,other));
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════ */
+function renderHeader() {
+  document.getElementById('headerDate').textContent=capitalize(new Date().toLocaleDateString(LOCALE,{weekday:'long',day:'numeric',month:'long',year:'numeric'}));
+}
+
+/* ══════════════════════════════════════════════════════
+   DEMO DATA
+   ══════════════════════════════════════════════════════ */
+async function maybeInsertDemoData() {
+  const activities=await getActivities();
+  const health=await getHealthData();
+  if(Object.keys(activities).length>0||Object.keys(health).length>0) return;
+  const today=new Date();
+  for(let i=4;i>=0;i--) {
+    const d=new Date(today); d.setDate(d.getDate()-i);
+    const ds=formatDate(d);
+    const n=2+Math.floor(Math.random()*3);
+    activities[ds]=DEMO_ACTIVITIES.slice().sort(()=>Math.random()-.5).slice(0,n).map(a=>({...a,id:uid(),done:i>0?Math.random()>.35:false}));
+  }
+  const oBase=[7,7.5,6,8,7,6.5,7.5], pBase=[9200,6800,11000,7400,8500,5200,10300];
+  for(let i=6;i>=0;i--) { const d=new Date(today); d.setDate(d.getDate()-i); health[formatDate(d)]={sonno:oBase[6-i],passi:pBase[6-i]}; }
+  await saveActivities(activities);
+  await saveHealthData(health);
+  const lib=await getLibrary();
+  if(!lib.length) {
+    await saveLibrary([
+      {id:uid(),titolo:'Mobilità mattina',categoria:'Mobilità',orario:'07:00',durata:20,note:'Stretching'},
+      {id:uid(),titolo:'Allenamento casa',categoria:'Allenamento',orario:'17:30',durata:45,note:'Corpo libero'},
+      {id:uid(),titolo:'Bici / camminata',categoria:'Bici/Camminata',orario:'12:15',durata:40,note:'Giro al parco'},
+      {id:uid(),titolo:'Yoga mattutino',categoria:'Yoga',orario:'07:30',durata:30,note:''},
+      {id:uid(),titolo:'Camminata digestiva',categoria:'Bici/Camminata',orario:'20:00',durata:20,note:'Dopo cena'},
+    ]);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   AUTH
+   ══════════════════════════════════════════════════════ */
+function switchAuthTab(tab) {
+  _authTab=tab;
+  document.getElementById('tabLogin').classList.toggle('active',tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active',tab==='register');
+  document.getElementById('authSubmitBtn').textContent=tab==='login'?'Accedi':'Crea account';
+  document.getElementById('authError').classList.remove('visible');
+}
+
+async function handleAuthSubmit() {
+  const email=document.getElementById('authEmail').value.trim();
+  const password=document.getElementById('authPassword').value;
+  const errEl=document.getElementById('authError');
+  const btn=document.getElementById('authSubmitBtn');
+  errEl.classList.remove('visible');
+  if(!email||!password) { errEl.textContent='Inserisci email e password.'; errEl.classList.add('visible'); return; }
+  btn.disabled=true; btn.textContent='...';
+  try {
+    if(_authTab==='register') await createUserWithEmailAndPassword(_auth,email,password);
+    else await signInWithEmailAndPassword(_auth,email,password);
+  } catch(e) {
+    const msgs={'auth/email-already-in-use':'Email già registrata.','auth/invalid-email':'Email non valida.','auth/weak-password':'Password troppo corta.','auth/user-not-found':'Account non trovato.','auth/wrong-password':'Password errata.','auth/invalid-credential':'Email o password errati.'};
+    errEl.textContent=msgs[e.code]||'Errore: '+e.message;
+    errEl.classList.add('visible');
+    btn.disabled=false; btn.textContent=_authTab==='login'?'Accedi':'Crea account';
+  }
+}
+
+async function startApp(user) {
+  _uid=user.uid;
+  document.getElementById('loadingOverlay').style.display='none';
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('headerUserEmail').textContent=user.email;
+  document.getElementById('btnLogout').style.display='';
+  document.querySelector('.app-layout').style.display='';
+  await initApp();
+}
+
+function showAuth() {
+  document.getElementById('loadingOverlay').style.display='none';
+  document.getElementById('authScreen').style.display='flex';
+  document.querySelector('.app-layout').style.display='none';
+}
+
+/* ══════════════════════════════════════════════════════
+   INIT APP
+   ══════════════════════════════════════════════════════ */
+async function initApp() {
+  await maybeInsertDemoData();
   renderHeader();
-  renderCalendar();
-  renderDayDetail();
-  renderHealthSection();
-  renderLibrary();
-  renderRewards();
+  await renderCatPicker();
+  renderColorPicker('sage');
+  await renderCalendar();
+  await renderDayDetail();
+  await renderHealthSection();
+  await renderLibrary();
+  await renderRewards();
 
-  // Accesso giornaliero
-  const access = recordDailyAccess();
-  if (access.newRecord) {
-    const labels = {1:'Primo accesso! Benvenuto 🌱', 5:'5 giorni di fila 🔥', 10:'10 giorni consecutivi ⚡', 25:'25 giorni — ottimo ritmo! 💪', 50:'50 giorni di fila 🏅', 100:'100 accessi! Leggenda 👑'};
-    setTimeout(() => showRewardToast('🔑', labels[access.milestoneStreak] || `${access.milestoneStreak} giorni consecutivi!`), 1000);
+  const access=await recordDailyAccess();
+  if(access.newRecord) {
+    const lbl={1:'Primo accesso! 🌱',5:'5 giorni di fila 🔥',10:'10 giorni ⚡',25:'25 giorni 💪',50:'50 giorni 🏅',100:'100 accessi! 👑'};
+    setTimeout(()=>showRewardToast('🔑',lbl[access.milestoneStreak]||`${access.milestoneStreak} giorni consecutivi!`),1000);
   }
 
-  /* Prev/Next: si comportano diversamente per vista */
-  document.getElementById('btnPrev').addEventListener('click', () => {
-    if (state.calView === 'giorno') {
-      state.selectedDate = addDays(state.selectedDate, -1);
-    } else if (state.calView === 'settimana') {
-      state.selectedDate = addDays(getMondayOf(state.selectedDate), -7);
-      const d = new Date(state.selectedDate + 'T12:00:00');
-      state.currentYear  = d.getFullYear();
-      state.currentMonth = d.getMonth();
-    } else {
-      if (state.currentMonth === 0) { state.currentMonth = 11; state.currentYear--; }
-      else state.currentMonth--;
-    }
-    renderCalendar();
-    renderDayDetail();
+  /* Nav prev/next */
+  document.getElementById('btnPrev').addEventListener('click', async ()=>{
+    if(state.calView==='giorno') { state.selectedDate=addDays(state.selectedDate,-1); }
+    else if(state.calView==='settimana') { state.selectedDate=addDays(getMondayOf(state.selectedDate),-7); const d=new Date(state.selectedDate+'T12:00:00'); state.currentYear=d.getFullYear(); state.currentMonth=d.getMonth(); }
+    else { if(state.currentMonth===0){state.currentMonth=11;state.currentYear--;}else state.currentMonth--; }
+    await renderCalendar(); await renderDayDetail();
   });
-  document.getElementById('btnNext').addEventListener('click', () => {
-    if (state.calView === 'giorno') {
-      state.selectedDate = addDays(state.selectedDate, 1);
-    } else if (state.calView === 'settimana') {
-      state.selectedDate = addDays(getMondayOf(state.selectedDate), 7);
-      const d = new Date(state.selectedDate + 'T12:00:00');
-      state.currentYear  = d.getFullYear();
-      state.currentMonth = d.getMonth();
-    } else {
-      if (state.currentMonth === 11) { state.currentMonth = 0; state.currentYear++; }
-      else state.currentMonth++;
-    }
-    renderCalendar();
-    renderDayDetail();
+  document.getElementById('btnNext').addEventListener('click', async ()=>{
+    if(state.calView==='giorno') { state.selectedDate=addDays(state.selectedDate,1); }
+    else if(state.calView==='settimana') { state.selectedDate=addDays(getMondayOf(state.selectedDate),7); const d=new Date(state.selectedDate+'T12:00:00'); state.currentYear=d.getFullYear(); state.currentMonth=d.getMonth(); }
+    else { if(state.currentMonth===11){state.currentMonth=0;state.currentYear++;}else state.currentMonth++; }
+    await renderCalendar(); await renderDayDetail();
   });
 
-  /* Switcher vista */
-  document.querySelectorAll('.view-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.calView = btn.dataset.view;
-      renderCalendar();
-      renderDayDetail();
-    });
-  });
+  /* View switcher */
+  document.querySelectorAll('.view-btn').forEach(btn=>{ btn.addEventListener('click', async ()=>{ state.calView=btn.dataset.view; await renderCalendar(); await renderDayDetail(); }); });
 
-  // Pre-imposta la data inizio con il giorno selezionato
-  document.getElementById('actDataInizio').value = state.selectedDate;
+  /* Salute */
+  document.getElementById('btnSalvaSalute').addEventListener('click', ()=>saveHealthToday());
 
-  // Mostra/nascondi campo data fine in base alla ripetizione
-  document.querySelectorAll('input[name="recurrence"]').forEach(r => {
-    r.addEventListener('change', () => {
-      const val = document.querySelector('input[name="recurrence"]:checked').value;
-      document.getElementById('dataFineWrap').style.display = val === 'nessuna' ? 'none' : 'block';
-    });
-  });
-
-  // ── Form collassabile ──
-  renderCatPicker();
-  renderColorPicker('sage');
-
-  document.getElementById('btnOpenForm').addEventListener('click', () => {
+  /* Form open/close */
+  document.getElementById('actDataInizio').value=state.selectedDate;
+  document.getElementById('btnOpenForm').addEventListener('click',()=>{
     document.getElementById('activityFormCard').classList.remove('form-card--collapsed');
     document.getElementById('activityFormCard').classList.add('form-card--open');
-    document.getElementById('btnOpenForm').style.display = 'none';
-    document.getElementById('actDataInizio').value = state.selectedDate;
+    document.getElementById('btnOpenForm').style.display='none';
+    document.getElementById('actDataInizio').value=state.selectedDate;
   });
-  document.getElementById('btnCloseForm').addEventListener('click', () => {
+  document.getElementById('btnCloseForm').addEventListener('click',()=>{
     document.getElementById('activityFormCard').classList.add('form-card--collapsed');
     document.getElementById('activityFormCard').classList.remove('form-card--open');
-    document.getElementById('btnOpenForm').style.display = '';
+    document.getElementById('btnOpenForm').style.display='';
   });
 
-  // ── Toggle nuova categoria ──
-  document.getElementById('newCatToggle').addEventListener('click', () => {
-    const f = document.getElementById('newCatForm');
-    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+  /* Ripetizione */
+  document.querySelectorAll('input[name="recurrence"]').forEach(r=>{
+    r.addEventListener('change',()=>{
+      const v=document.querySelector('input[name="recurrence"]:checked').value, show=v!=='nessuna';
+      document.getElementById('actDataFine').style.display=show?'':'none';
+      document.getElementById('actDataFineLabel').style.display=show?'':'none';
+    });
   });
 
-  // ── Salva nuova categoria ──
-  document.getElementById('btnSaveNewCat').addEventListener('click', () => {
-    const name  = document.getElementById('newCatName').value.trim();
-    const emoji = document.getElementById('newCatEmoji').value.trim() || '📌';
-    const colorSel = document.querySelector('.color-swatch.selected');
-    const color = colorSel ? colorSel.dataset.id : 'terracotta';
-    if (!name) { showToast('⚠ Inserisci un nome per la categoria'); return; }
-    const existing = getCategories().find(c => c.name.toLowerCase() === name.toLowerCase());
-    if (existing) { showToast('⚠ Categoria già esistente'); return; }
-    const custom = getCustomCategories();
-    custom.push({ name, emoji, color });
-    saveCustomCategories(custom);
-    renderCatPicker();
-    document.getElementById('newCatName').value  = '';
-    document.getElementById('newCatEmoji').value = '';
-    document.getElementById('newCatForm').style.display = 'none';
+  /* Nuova categoria */
+  document.getElementById('newCatToggle').addEventListener('click',()=>{
+    const f=document.getElementById('newCatForm');
+    f.style.display=f.style.display==='none'?'block':'none';
+  });
+  document.getElementById('btnSaveNewCat').addEventListener('click', async ()=>{
+    const name=document.getElementById('newCatName').value.trim();
+    const emoji=document.getElementById('newCatEmoji').value.trim()||'📌';
+    const colorSel=document.querySelector('.color-swatch.selected');
+    const color=colorSel?colorSel.dataset.id:'terracotta';
+    if(!name) { showToast('⚠ Inserisci un nome'); return; }
+    const existing=(await getCategories()).find(c=>c.name.toLowerCase()===name.toLowerCase());
+    if(existing) { showToast('⚠ Categoria già esistente'); return; }
+    const custom=await getCustomCategories();
+    custom.push({name,emoji,color});
+    await saveCustomCategories(custom);
+    await renderCatPicker();
+    document.getElementById('newCatName').value='';
+    document.getElementById('newCatEmoji').value='';
+    document.getElementById('newCatForm').style.display='none';
     showToast(`✓ Categoria "${name}" creata`);
   });
 
-  // ── Ripetizione → mostra/nascondi data fine ──
-  document.querySelectorAll('input[name="recurrence"]').forEach(r => {
-    r.addEventListener('change', () => {
-      const val = document.querySelector('input[name="recurrence"]:checked').value;
-      const show = val !== 'nessuna';
-      document.getElementById('actDataFine').style.display       = show ? '' : 'none';
-      document.getElementById('actDataFineLabel').style.display  = show ? '' : 'none';
-    });
+  /* Aggiungi attività */
+  document.getElementById('librarySaveToggle').addEventListener('click',()=>{
+    librarySaveEnabled=!librarySaveEnabled;
+    document.getElementById('librarySaveIcon').textContent=librarySaveEnabled?'☑':'☐';
   });
-
-  document.getElementById('btnSalvaSalute').addEventListener('click', saveHealthToday);
-
-  // Toggle "salva in libreria"
-  librarySaveEnabled = false;
-  document.getElementById('librarySaveToggle').addEventListener('click', () => {
-    librarySaveEnabled = !librarySaveEnabled;
-    document.getElementById('librarySaveIcon').textContent = librarySaveEnabled ? '☑' : '☐';
-  });
-
-  document.getElementById('btnAggiungiAttivita').addEventListener('click', () => {
-    const act = getFormActivity();
-    if (!act) return;
-    const count = generateDates(act.dataInizio, act.ripetizione, act.dataFine).length;
-    addActivity(act.dataInizio, act);
-    if (act.dataInizio !== state.selectedDate) {
-      state.selectedDate = act.dataInizio;
-    }
-    // Salva in libreria se richiesto
-    if (librarySaveEnabled) {
-      const saved = addToLibrary(act);
-      if (saved) renderLibrary();
-    }
+  document.getElementById('btnAggiungiAttivita').addEventListener('click', async ()=>{
+    const act=getFormActivity(); if(!act) return;
+    const count=generateDates(act.dataInizio,act.ripetizione,act.dataFine).length;
+    await addActivity(act.dataInizio,act);
+    if(act.dataInizio!==state.selectedDate) state.selectedDate=act.dataInizio;
+    if(librarySaveEnabled) { const saved=await addToLibrary(act); if(saved) await renderLibrary(); }
     resetActivityForm();
-    librarySaveEnabled = false;
-    document.getElementById('librarySaveIcon').textContent = '☐';
-    showToast(count > 1 ? `✓ ${count} occorrenze aggiunte` : '✓ Attività aggiunta');
+    showToast(count>1?`✓ ${count} occorrenze aggiunte`:'✓ Attività aggiunta');
   });
-
-  document.getElementById('btnAggiungiDemo').addEventListener('click', () => {
-    DEMO_ACTIVITIES.slice().sort(() => Math.random()-.5).slice(0,3)
-      .forEach(a => addActivity(state.selectedDate, { ...a }));
+  document.getElementById('btnAggiungiDemo').addEventListener('click', async ()=>{
+    for(const a of DEMO_ACTIVITIES.slice().sort(()=>Math.random()-.5).slice(0,3)) await addActivity(state.selectedDate,{...a});
     showToast('✓ 3 attività demo aggiunte');
   });
 }
 
-document.addEventListener('DOMContentLoaded', init);
+/* ══════════════════════════════════════════════════════
+   BOOTSTRAP
+   ══════════════════════════════════════════════════════ */
+function _bootstrap() {
+  const {_auth:auth,_db:db}={_auth,_db};
+  document.querySelector('.app-layout').style.display='none';
+
+  onAuthStateChanged(_auth, user=>{ if(user) startApp(user); else showAuth(); });
+
+  document.getElementById('tabLogin').addEventListener('click',()=>switchAuthTab('login'));
+  document.getElementById('tabRegister').addEventListener('click',()=>switchAuthTab('register'));
+  document.getElementById('authSubmitBtn').addEventListener('click',()=>handleAuthSubmit());
+  document.getElementById('authEmail').addEventListener('keydown',e=>{ if(e.key==='Enter') handleAuthSubmit(); });
+  document.getElementById('authPassword').addEventListener('keydown',e=>{ if(e.key==='Enter') handleAuthSubmit(); });
+  document.getElementById('btnLogout').addEventListener('click', async ()=>{
+    await signOut(_auth);
+    _uid=null;
+    document.getElementById('headerUserEmail').textContent='';
+    document.getElementById('btnLogout').style.display='none';
+    charts={sonno:null,passi:null};
+  });
+}
+
+// In un modulo ES, il DOM è sempre pronto all'esecuzione
+_bootstrap();
+
 </script>
 </body>
 </html>
