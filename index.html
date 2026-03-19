@@ -851,12 +851,13 @@ body {
 }
 .hs-stat-label { display:block; font-size:.62rem; color:var(--text-muted); margin-bottom:2px; }
 .hs-stat-val { font-size:.88rem; font-weight:700; color:var(--accent); }
-.hs-breakdown { display:flex; flex-direction:column; gap:3px; }
-.hs-item { display:flex; align-items:center; gap:6px; font-size:.66rem; }
-.hs-item-label { color:var(--text-muted); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.hs-item-bar { flex:2; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
-.hs-item-fill { height:100%; border-radius:2px; }
-.hs-item-val { color:var(--text-secondary); font-weight:600; min-width:24px; text-align:right; }
+.hs-breakdown { display:flex; flex-direction:column; gap:5px; margin-top:4px; }
+.hs-item { display:flex; flex-direction:column; gap:2px; }
+.hs-item-top { display:flex; align-items:center; justify-content:space-between; }
+.hs-item-label { font-size:.68rem; color:var(--text-secondary); font-weight:500; }
+.hs-item-val { font-size:.68rem; color:var(--text-secondary); font-weight:700; }
+.hs-item-bar { width:100%; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.hs-item-fill { height:100%; border-radius:2px; transition:width .6s ease; }
 
 /* ══ PROFILE MODAL ════════════════════════════════════ */
 .modal-overlay {
@@ -2380,32 +2381,44 @@ async function renderProfileHistory() {
 /* ══════════════════════════════════════════════════════
    ALGORITMO PUNTEGGIO SALUTE
    ══════════════════════════════════════════════════════ */
+/* Interpolazione lineare tra due estremi */
+function lerp(val, inMin, inMax, outMin, outMax) {
+  const clamped = Math.max(inMin, Math.min(inMax, val));
+  return Math.round(outMin + (outMax - outMin) * (clamped - inMin) / (inMax - inMin));
+}
+
 async function computeHealthScore() {
   const p      = await getLatestProfile();
   const health = await getHealthData();
   const acts   = await getActivities();
   const today  = formatDate(new Date());
   const th     = health[today];
-  const gam    = await getGamData();
 
   const scores=[];
   const items=[];
 
-  // 1. SONNO (peso 20)
+  // ── 1. SONNO — peso 20 ──────────────────────────────
+  // Ottimale 7-9h. Scala continua, non a gradini.
   if(th?.sonno!=null) {
     const s=th.sonno;
-    // Ottimale 7-9h
-    let sc = s>=7&&s<=9 ? 100 : s>=6&&s<7 ? 70 : s>=9&&s<=10 ? 80 : s>=5&&s<6 ? 40 : 20;
+    let sc;
+    if(s>=7 && s<=9)      sc=100;
+    else if(s>9 && s<=10) sc=lerp(s,9,10,100,75);
+    else if(s>10)         sc=lerp(s,10,12,75,40);
+    else if(s>=6 && s<7)  sc=lerp(s,6,7,60,100);
+    else if(s>=5 && s<6)  sc=lerp(s,5,6,30,60);
+    else                  sc=Math.max(10, lerp(s,0,5,0,30));
     scores.push({w:20,v:sc}); items.push({l:'Sonno',v:sc,c:'#5b8fa8'});
   }
 
-  // 2. PASSI (peso 20)
+  // ── 2. PASSI — peso 20 ──────────────────────────────
+  // 10.000 = 100 pt, scala lineare fino a 0
   if(th?.passi!=null) {
-    const sc=Math.min(Math.round(th.passi/80),100);
+    const sc=Math.min(Math.round(th.passi/100),100);
     scores.push({w:20,v:sc}); items.push({l:'Passi',v:sc,c:'#6b9e78'});
   }
 
-  // 3. ATTIVITÀ COMPLETATE OGGI (peso 15)
+  // ── 3. ATTIVITÀ COMPLETATE — peso 15 ────────────────
   const todayActs=acts[today]||[];
   if(todayActs.length>0) {
     const done=todayActs.filter(a=>a.done).length;
@@ -2413,67 +2426,135 @@ async function computeHealthScore() {
     scores.push({w:15,v:sc}); items.push({l:'Attività',v:sc,c:'#b5804f'});
   }
 
-  // 4. IMC (peso 15) - range ottimale 18.5-24.9
+  // ── 4. IMC — peso 15 ────────────────────────────────
+  // Scala OMS: sottopeso <18.5 | normale 18.5-24.9 | sovrappeso 25-29.9 | obeso >30
   if(p?.imc!=null) {
     const imc=p.imc;
     let sc;
-    if(imc>=18.5&&imc<=24.9) sc=100;
-    else if(imc>=25&&imc<=27) sc=75;
-    else if(imc>=17&&imc<18.5) sc=70;
-    else if(imc>27&&imc<=30) sc=50;
-    else if(imc>30&&imc<=35) sc=25;
-    else sc=10;
-    scores.push({w:15,v:sc}); items.push({l:'IMC',v:sc,c:'#8b7cc8'});
+    if(imc>=18.5 && imc<=24.9) {
+      // Picco a 22 (centro della norma), degrada gradualmente verso i bordi
+      const peak=22;
+      const dist=Math.abs(imc-peak);
+      sc=Math.round(100 - dist*3);  // -3pt per ogni unità dal centro
+    }
+    else if(imc>=25 && imc<=29.9) sc=lerp(imc,25,29.9,74,40);
+    else if(imc>=17 && imc<18.5)  sc=lerp(imc,17,18.5,50,74);
+    else if(imc>29.9 && imc<=35)  sc=lerp(imc,30,35,40,15);
+    else if(imc<17)               sc=lerp(imc,10,17,10,50);
+    else                          sc=10;
+    sc=Math.max(0,Math.min(100,sc));
+    scores.push({w:15,v:sc}); items.push({l:'IMC ('+imc+')',v:sc,c:'#8b7cc8'});
   }
 
-  // 5. GRASSO VISCERALE (peso 10) - ottimale 1-9
+  // ── 5. GRASSO VISCERALE — peso 10 ───────────────────
+  // Livello 1-9 ottimale, 10-14 attenzione, 15+ critico
   if(p?.grassoVisc!=null) {
     const gv=p.grassoVisc;
-    let sc = gv<=9?100 : gv<=12?70 : gv<=15?40 : 15;
-    scores.push({w:10,v:sc}); items.push({l:'Gr. viscerale',v:sc,c:'#d97060'});
+    let sc;
+    if(gv<=9)             sc=lerp(gv,1,9,100,85);
+    else if(gv<=12)       sc=lerp(gv,9,12,85,55);
+    else if(gv<=15)       sc=lerp(gv,12,15,55,30);
+    else                  sc=lerp(gv,15,20,30,5);
+    scores.push({w:10,v:sc}); items.push({l:'Grasso viscerale',v:sc,c:'#d97060'});
   }
 
-  // 6. MASSA GRASSA % (peso 10) - ottimale M:10-20 F:18-28
-  if(p?.massaGrassa!=null&&p?.sesso) {
+  // ── 6. MASSA GRASSA % — peso 10 ─────────────────────
+  // Range ottimale per adulti: M 10-20%, F 18-28%
+  if(p?.massaGrassa!=null && p?.sesso) {
     const mg=p.massaGrassa, sex=p.sesso;
     let sc;
-    if(sex==='M') sc = mg>=10&&mg<=20?100:mg>20&&mg<=25?70:mg>25&&mg<=30?45:mg<10?80:20;
-    else          sc = mg>=18&&mg<=28?100:mg>28&&mg<=33?70:mg>33&&mg<=38?45:mg<18?80:20;
+    if(sex==='M') {
+      if(mg>=10&&mg<=20)      sc=lerp(mg,10,20,95,100); // zona ottimale
+      else if(mg>20&&mg<=25)  sc=lerp(mg,20,25,95,65);
+      else if(mg>25&&mg<=30)  sc=lerp(mg,25,30,65,35);
+      else if(mg>30)          sc=lerp(mg,30,45,35,5);
+      else if(mg>=6&&mg<10)   sc=lerp(mg,6,10,55,95);  // atleta/sottopeso
+      else                    sc=30;
+    } else {
+      if(mg>=18&&mg<=28)      sc=lerp(mg,18,28,95,100);
+      else if(mg>28&&mg<=33)  sc=lerp(mg,28,33,95,65);
+      else if(mg>33&&mg<=38)  sc=lerp(mg,33,38,65,35);
+      else if(mg>38)          sc=lerp(mg,38,50,35,5);
+      else if(mg>=14&&mg<18)  sc=lerp(mg,14,18,55,95);
+      else                    sc=30;
+    }
     scores.push({w:10,v:sc}); items.push({l:'Massa grassa',v:sc,c:'#c9a84c'});
   }
 
-  // 7. MUSCOLI % (peso 5)
-  if(p?.muscoli!=null&&p?.sesso) {
+  // ── 7. MUSCOLI % — peso 10 ──────────────────────────
+  // Range adulti: M ottimale 40-50%, F 30-40%
+  if(p?.muscoli!=null && p?.sesso) {
     const mu=p.muscoli, sex=p.sesso;
     let sc;
-    if(sex==='M') sc = mu>=40?100:mu>=35?80:mu>=30?60:mu>=25?40:20;
-    else          sc = mu>=33?100:mu>=28?80:mu>=23?60:mu>=18?40:20;
-    scores.push({w:5,v:sc}); items.push({l:'Muscoli',v:sc,c:'#4ea8a0'});
+    if(sex==='M') {
+      if(mu>=40&&mu<=50)      sc=100;
+      else if(mu>50)          sc=lerp(mu,50,60,100,80); // atleta
+      else if(mu>=35&&mu<40)  sc=lerp(mu,35,40,75,100);
+      else if(mu>=30&&mu<35)  sc=lerp(mu,30,35,50,75);
+      else if(mu>=25&&mu<30)  sc=lerp(mu,25,30,25,50);
+      else                    sc=lerp(mu,10,25,5,25);
+    } else {
+      if(mu>=30&&mu<=40)      sc=100;
+      else if(mu>40)          sc=lerp(mu,40,50,100,80);
+      else if(mu>=25&&mu<30)  sc=lerp(mu,25,30,75,100);
+      else if(mu>=20&&mu<25)  sc=lerp(mu,20,25,50,75);
+      else if(mu>=15&&mu<20)  sc=lerp(mu,15,20,25,50);
+      else                    sc=lerp(mu,5,15,5,25);
+    }
+    scores.push({w:10,v:sc}); items.push({l:'Muscoli',v:sc,c:'#4ea8a0'});
   }
 
-  // 8. IDRATAZIONE % (peso 5)
-  if(p?.acqua!=null&&p?.sesso) {
+  // ── 8. IDRATAZIONE % — peso 5 ───────────────────────
+  // Range ottimale: M 55-65%, F 45-60%
+  if(p?.acqua!=null && p?.sesso) {
     const aq=p.acqua, sex=p.sesso;
     let sc;
-    if(sex==='M') sc = aq>=55&&aq<=65?100:aq>=50&&aq<55?70:aq>=65&&aq<=70?80:aq<50?30:20;
-    else          sc = aq>=45&&aq<=60?100:aq>=40&&aq<45?70:aq>=60&&aq<=65?80:aq<40?30:20;
+    if(sex==='M') {
+      if(aq>=55&&aq<=65)      sc=100;
+      else if(aq>65&&aq<=70)  sc=lerp(aq,65,70,100,75);
+      else if(aq>70)          sc=lerp(aq,70,80,75,50);
+      else if(aq>=50&&aq<55)  sc=lerp(aq,50,55,70,100);
+      else if(aq>=40&&aq<50)  sc=lerp(aq,40,50,30,70);
+      else                    sc=lerp(aq,20,40,5,30);
+    } else {
+      if(aq>=45&&aq<=60)      sc=100;
+      else if(aq>60&&aq<=65)  sc=lerp(aq,60,65,100,75);
+      else if(aq>65)          sc=lerp(aq,65,75,75,50);
+      else if(aq>=40&&aq<45)  sc=lerp(aq,40,45,70,100);
+      else if(aq>=30&&aq<40)  sc=lerp(aq,30,40,30,70);
+      else                    sc=lerp(aq,15,30,5,30);
+    }
     scores.push({w:5,v:sc}); items.push({l:'Idratazione',v:sc,c:'#4a9ad4'});
+  }
+
+  // ── 9. PROTEINE % — peso 5 ──────────────────────────
+  // Range ottimale 16-20%
+  if(p?.proteine!=null) {
+    const pr=p.proteine;
+    let sc;
+    if(pr>=16&&pr<=20)      sc=100;
+    else if(pr>20&&pr<=23)  sc=lerp(pr,20,23,100,80);
+    else if(pr>23)          sc=lerp(pr,23,30,80,50);
+    else if(pr>=13&&pr<16)  sc=lerp(pr,13,16,65,100);
+    else if(pr>=10&&pr<13)  sc=lerp(pr,10,13,35,65);
+    else                    sc=lerp(pr,5,10,5,35);
+    scores.push({w:5,v:sc}); items.push({l:'Proteine',v:sc,c:'#b06ac0'});
   }
 
   if(!scores.length) return null;
 
-  // Media pesata
+  // ── Media pesata ─────────────────────────────────────
   const totalW=scores.reduce((s,x)=>s+x.w,0);
   const score=Math.round(scores.reduce((s,x)=>s+x.v*x.w,0)/totalW);
 
-  // ETÀ CORPOREA
+  // ── ETÀ CORPOREA ─────────────────────────────────────
+  // Score 100 = -5 anni, score 50 = ±0, score 0 = +10 anni
   let bodyAge=null;
   if(p?.dataNascita) {
     const age=calcAge(p.dataNascita);
     if(age) {
-      // Aggiustamento: ogni 10 punti sotto 50 = +1 anno corporeo
-      const delta=Math.round((50-score)/10);
-      bodyAge=Math.max(age+delta,age-15);
+      const delta=Math.round((50-score)/10);  // ogni 10pt sotto 50 = +1 anno
+      bodyAge=Math.max(18, age+delta);
     }
   }
 
@@ -2522,9 +2603,11 @@ async function renderHealthScore() {
   // Breakdown items
   breakdown.innerHTML=items.map(it=>`
     <div class="hs-item">
-      <span class="hs-item-label">${it.l}</span>
+      <div class="hs-item-top">
+        <span class="hs-item-label">${it.l}</span>
+        <span class="hs-item-val">${it.v}<span style="font-weight:400;color:var(--text-muted)">/100</span></span>
+      </div>
       <div class="hs-item-bar"><div class="hs-item-fill" style="width:${it.v}%;background:${it.c}"></div></div>
-      <span class="hs-item-val">${it.v}</span>
     </div>`).join('');
 }
 
