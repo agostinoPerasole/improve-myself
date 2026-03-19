@@ -1997,6 +1997,7 @@ async function handleAuthSubmit() {
 
 async function startApp(user) {
   _uid=user.uid;
+  console.log('startApp chiamata per:', user.email);
   document.getElementById('loadingOverlay').style.display='none';
   document.getElementById('authScreen').style.display='none';
   document.getElementById('headerUserEmail').textContent=user.email;
