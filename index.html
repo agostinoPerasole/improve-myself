@@ -832,26 +832,25 @@ body {
 
 /* ══ HEALTH SCORE CARD ════════════════════════════════ */
 .health-score-card { padding:14px; }
-.hs-top { display:flex; align-items:center; gap:14px; margin-bottom:10px; }
-.hs-ring { width:76px; height:76px; flex-shrink:0; transform:rotate(-90deg); }
-.hs-ring-bg  { fill:none; stroke:var(--border); stroke-width:7; }
-.hs-ring-fill{ fill:none; stroke:var(--accent); stroke-width:7; stroke-linecap:round; transition:stroke-dashoffset .8s ease, stroke .4s; }
-.hs-score-wrap { position:relative; flex-shrink:0; }
-.hs-score-inner {
-  position:absolute; inset:0; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; transform:rotate(90deg);
+.hs-title-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.hs-title { font-family:var(--font-display); font-size:.9rem; font-weight:600; color:var(--text-primary); }
+.hs-score-pill {
+  display:flex; align-items:baseline; gap:2px;
+  background:var(--accent); color:#fff;
+  padding:3px 10px; border-radius:20px;
 }
-.hs-score-num { font-size:1.2rem; font-weight:700; color:var(--text-primary); line-height:1; }
-.hs-score-label { font-size:.55rem; color:var(--text-muted); }
-.hs-info { flex:1; min-width:0; }
-.hs-title { font-family:var(--font-display); font-size:.88rem; font-weight:600; color:var(--text-primary); margin-bottom:4px; }
-.hs-age-wrap,.hs-ideal-wrap { display:flex; justify-content:space-between; font-size:.72rem; margin-bottom:2px; }
-.hs-age-label,.hs-ideal-label { color:var(--text-muted); }
-.hs-age-val { font-weight:700; color:var(--accent); }
-.hs-ideal-val { font-weight:600; color:var(--text-secondary); }
-.hs-status { font-size:.68rem; color:var(--text-muted); margin-top:4px; font-style:italic; }
-.hs-bar-wrap { height:5px; background:var(--border); border-radius:3px; overflow:hidden; margin-bottom:8px; }
-.hs-bar-fill { height:100%; border-radius:3px; background:var(--accent); transition:width .8s ease; }
+.hs-score-pill span:first-child { font-size:1.1rem; font-weight:700; line-height:1; }
+.hs-score-sub { font-size:.6rem; opacity:.8; }
+.hs-bar-wrap { height:7px; background:var(--border); border-radius:4px; overflow:hidden; margin-bottom:6px; }
+.hs-bar-fill { height:100%; border-radius:4px; background:var(--accent); transition:width .8s ease, background .4s; }
+.hs-status { font-size:.7rem; color:var(--text-muted); font-style:italic; }
+.hs-stats-row { display:flex; gap:8px; margin-bottom:10px; }
+.hs-stat {
+  flex:1; background:var(--bg-card-alt); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:6px 8px; text-align:center;
+}
+.hs-stat-label { display:block; font-size:.62rem; color:var(--text-muted); margin-bottom:2px; }
+.hs-stat-val { font-size:.88rem; font-weight:700; color:var(--accent); }
 .hs-breakdown { display:flex; flex-direction:column; gap:3px; }
 .hs-item { display:flex; align-items:center; gap:6px; font-size:.66rem; }
 .hs-item-label { color:var(--text-muted); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -903,7 +902,14 @@ body {
   background:var(--bg-card-alt); border:1px solid var(--border);
   border-radius:var(--radius-sm); padding:10px 12px;
 }
-.history-date { font-size:.72rem; font-weight:600; color:var(--accent); margin-bottom:6px; }
+.history-date-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.history-date { font-size:.72rem; font-weight:600; color:var(--accent); }
+.history-del-btn {
+  background:none; border:none; cursor:pointer; font-size:13px;
+  padding:2px 5px; border-radius:4px; color:var(--text-muted);
+  transition:all .15s; line-height:1;
+}
+.history-del-btn:hover { background:#fde8e8; }
 .history-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
 .history-field { font-size:.68rem; }
 .history-field-label { color:var(--text-muted); }
@@ -1005,33 +1011,25 @@ body {
 
     <!-- Punteggio Salute -->
     <section class="card health-score-card" id="healthScoreCard">
-      <div class="hs-top">
-        <div class="hs-score-wrap">
-          <svg class="hs-ring" viewBox="0 0 80 80">
-            <circle class="hs-ring-bg" cx="40" cy="40" r="32"/>
-            <circle class="hs-ring-fill" id="hsRingFill" cx="40" cy="40" r="32"
-              stroke-dasharray="201" stroke-dashoffset="201"/>
-          </svg>
-          <div class="hs-score-inner">
-            <span class="hs-score-num" id="hsScoreNum">—</span>
-            <span class="hs-score-label">/ 100</span>
-          </div>
-        </div>
-        <div class="hs-info">
-          <div class="hs-title">Punteggio Salute</div>
-          <div class="hs-age-wrap">
-            <span class="hs-age-label">Età corporea</span>
-            <span class="hs-age-val" id="hsBodyAge">—</span>
-          </div>
-          <div class="hs-ideal-wrap">
-            <span class="hs-ideal-label">Peso ideale</span>
-            <span class="hs-ideal-val" id="hsIdealWeight">—</span>
-          </div>
-          <div class="hs-status" id="hsStatus">Completa il profilo</div>
+      <div class="hs-title-row">
+        <span class="hs-title">Punteggio Salute</span>
+        <div class="hs-score-pill" id="hsScorePill">
+          <span id="hsScoreNum">—</span><span class="hs-score-sub">/100</span>
         </div>
       </div>
       <div class="hs-bar-wrap">
         <div class="hs-bar-fill" id="hsBarFill" style="width:0%"></div>
+      </div>
+      <div class="hs-status" id="hsStatus" style="margin-bottom:8px">Completa il profilo</div>
+      <div class="hs-stats-row">
+        <div class="hs-stat">
+          <span class="hs-stat-label">Età corporea</span>
+          <span class="hs-stat-val" id="hsBodyAge">—</span>
+        </div>
+        <div class="hs-stat">
+          <span class="hs-stat-label">Peso ideale</span>
+          <span class="hs-stat-val" id="hsIdealWeight">—</span>
+        </div>
       </div>
       <div class="hs-breakdown" id="hsBreakdown"></div>
     </section>
@@ -2298,11 +2296,26 @@ async function renderProfileHistory() {
     {k:'grassoVisc',l:'Gr. viscerale',u:''},{k:'proteine',l:'Proteine',u:'%'},{k:'metabolismo',l:'Metabolismo',u:'kcal'},
   ];
   el.innerHTML='';
-  [...hist].reverse().forEach(entry=>{
+  const histReversed=[...hist].reverse();
+  histReversed.forEach((entry, revIdx)=>{
+    const realIdx = hist.length - 1 - revIdx; // index in original array
     const div=document.createElement('div'); div.className='history-item';
     const age=calcAge(entry.dataNascita);
-    div.innerHTML=`<div class="history-date">${new Date(entry.data).toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}${age?' · '+age+' anni':''}</div>
+    div.innerHTML=`
+      <div class="history-date-row">
+        <span class="history-date">${new Date(entry.data).toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}${age?' · '+age+' anni':''}</span>
+        <button class="history-del-btn" data-idx="${realIdx}" title="Elimina">🗑</button>
+      </div>
       <div class="history-grid">${fields.map(f=>entry[f.k]!=null?`<div class="history-field"><div class="history-field-label">${f.l}</div><div class="history-field-val">${entry[f.k]}${f.u}</div></div>`:'').join('')}</div>`;
+    div.querySelector('.history-del-btn').addEventListener('click', async ()=>{
+      if(!confirm('Eliminare questa rilevazione?')) return;
+      const h=await getProfileHistory();
+      h.splice(realIdx,1);
+      await saveProfileHistory(h);
+      showToast('Rilevazione eliminata');
+      await renderProfileHistory();
+      await renderHealthScore();
+    });
     el.appendChild(div);
   });
 }
@@ -2414,13 +2427,13 @@ async function renderHealthScore() {
   const result = await computeHealthScore();
   const p      = await getLatestProfile();
 
-  const numEl   = document.getElementById('hsScoreNum');
-  const ringFill= document.getElementById('hsRingFill');
-  const barFill = document.getElementById('hsBarFill');
-  const status  = document.getElementById('hsStatus');
-  const bodyAge = document.getElementById('hsBodyAge');
-  const idealW  = document.getElementById('hsIdealWeight');
-  const breakdown=document.getElementById('hsBreakdown');
+  const numEl    = document.getElementById('hsScoreNum');
+  const scorePill= document.getElementById('hsScorePill');
+  const barFill  = document.getElementById('hsBarFill');
+  const status   = document.getElementById('hsStatus');
+  const bodyAge  = document.getElementById('hsBodyAge');
+  const idealW   = document.getElementById('hsIdealWeight');
+  const breakdown= document.getElementById('hsBreakdown');
 
   // Peso ideale (indipendente dai dati odierni)
   if(p?.altezza&&p?.sesso) {
@@ -2430,25 +2443,21 @@ async function renderHealthScore() {
 
   if(!result) {
     numEl.textContent='—';
+    scorePill.style.background='var(--text-muted)';
     status.textContent='Completa profilo e riepilogo per il punteggio';
-    bodyAge.textContent='—';
+    if(bodyAge) bodyAge.textContent='—';
     breakdown.innerHTML='';
     return;
   }
 
   const {score,items,bodyAge:ba}=result;
-
-  // Ring SVG: circumference=201
-  const offset=Math.round(201-(score/100*201));
-  ringFill.style.strokeDashoffset=offset;
-  // Color based on score
   const col = score>=80?'#4ab888':score>=60?'#c9a84c':score>=40?'#d97060':'#c0614a';
-  ringFill.style.stroke=col;
-  barFill.style.width=score+'%';
-  barFill.style.background=col;
 
   numEl.textContent=score;
-  bodyAge.textContent=ba?ba+' anni':'—';
+  scorePill.style.background=col;
+  barFill.style.width=score+'%';
+  barFill.style.background=col;
+  if(bodyAge) bodyAge.textContent=ba?ba+' anni':'—';
 
   const lbl = score>=85?'🟢 Eccellente':score>=70?'🟡 Buono':score>=55?'🟠 Discreto':score>=40?'🔴 Da migliorare':'⚫ Critico';
   status.textContent=lbl;
