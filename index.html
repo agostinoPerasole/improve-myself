@@ -829,6 +829,125 @@ body {
 }
 @keyframes spin-fast { to { transform:rotate(360deg); } }
 .loading-text { font-size:.85rem; color:var(--text-muted); }
+
+/* ══ HEALTH SCORE CARD ════════════════════════════════ */
+.health-score-card { padding:14px; }
+.hs-top { display:flex; align-items:center; gap:14px; margin-bottom:10px; }
+.hs-ring { width:76px; height:76px; flex-shrink:0; transform:rotate(-90deg); }
+.hs-ring-bg  { fill:none; stroke:var(--border); stroke-width:7; }
+.hs-ring-fill{ fill:none; stroke:var(--accent); stroke-width:7; stroke-linecap:round; transition:stroke-dashoffset .8s ease, stroke .4s; }
+.hs-score-wrap { position:relative; flex-shrink:0; }
+.hs-score-inner {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; transform:rotate(90deg);
+}
+.hs-score-num { font-size:1.2rem; font-weight:700; color:var(--text-primary); line-height:1; }
+.hs-score-label { font-size:.55rem; color:var(--text-muted); }
+.hs-info { flex:1; min-width:0; }
+.hs-title { font-family:var(--font-display); font-size:.88rem; font-weight:600; color:var(--text-primary); margin-bottom:4px; }
+.hs-age-wrap,.hs-ideal-wrap { display:flex; justify-content:space-between; font-size:.72rem; margin-bottom:2px; }
+.hs-age-label,.hs-ideal-label { color:var(--text-muted); }
+.hs-age-val { font-weight:700; color:var(--accent); }
+.hs-ideal-val { font-weight:600; color:var(--text-secondary); }
+.hs-status { font-size:.68rem; color:var(--text-muted); margin-top:4px; font-style:italic; }
+.hs-bar-wrap { height:5px; background:var(--border); border-radius:3px; overflow:hidden; margin-bottom:8px; }
+.hs-bar-fill { height:100%; border-radius:3px; background:var(--accent); transition:width .8s ease; }
+.hs-breakdown { display:flex; flex-direction:column; gap:3px; }
+.hs-item { display:flex; align-items:center; gap:6px; font-size:.66rem; }
+.hs-item-label { color:var(--text-muted); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hs-item-bar { flex:2; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+.hs-item-fill { height:100%; border-radius:2px; }
+.hs-item-val { color:var(--text-secondary); font-weight:600; min-width:24px; text-align:right; }
+
+/* ══ PROFILE MODAL ════════════════════════════════════ */
+.modal-overlay {
+  position:fixed; inset:0; z-index:9000;
+  background:rgba(0,0,0,.45); backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.modal-card {
+  background:var(--bg-card); border-radius:var(--radius-md);
+  width:100%; max-width:560px; max-height:85vh;
+  display:flex; flex-direction:column;
+  box-shadow:var(--shadow-lg); overflow:hidden;
+}
+.modal-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 20px 14px; border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.modal-title { font-family:var(--font-display); font-size:1.1rem; font-weight:600; }
+.modal-close {
+  background:none; border:none; cursor:pointer; color:var(--text-muted);
+  font-size:16px; padding:4px 8px; border-radius:4px; transition:all .15s;
+}
+.modal-close:hover { color:var(--danger); background:#fde8e8; }
+.modal-tabs {
+  display:flex; border-bottom:1px solid var(--border);
+  padding:0 20px; flex-shrink:0;
+}
+.modal-tab {
+  padding:10px 16px; background:none; border:none;
+  font-family:var(--font-body); font-size:.85rem; font-weight:500;
+  color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent;
+  margin-bottom:-1px; transition:all .15s;
+}
+.modal-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.modal-tab-content { padding:18px 20px; overflow-y:auto; flex:1; }
+.profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.profile-actions { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.profile-last-saved { font-size:.72rem; color:var(--text-muted); }
+
+/* Storico profilo */
+.profile-history { display:flex; flex-direction:column; gap:10px; }
+.history-item {
+  background:var(--bg-card-alt); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:10px 12px;
+}
+.history-date { font-size:.72rem; font-weight:600; color:var(--accent); margin-bottom:6px; }
+.history-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+.history-field { font-size:.68rem; }
+.history-field-label { color:var(--text-muted); }
+.history-field-val { font-weight:600; color:var(--text-primary); }
+
+/* ══ TUTORIAL ═════════════════════════════════════════ */
+.tutorial-overlay {
+  position:fixed; bottom:20px; right:20px; z-index:8000;
+  max-width:340px; width:calc(100vw - 40px);
+}
+.tutorial-card {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:20px;
+  box-shadow:var(--shadow-lg);
+  animation:slideInRight .3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideInRight { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+.tutorial-close {
+  position:absolute; top:12px; right:12px;
+  background:none; border:none; cursor:pointer; color:var(--text-muted);
+  font-size:14px; padding:2px 6px; border-radius:4px;
+}
+.tutorial-close:hover { color:var(--danger); }
+.tutorial-icon { font-size:2rem; margin-bottom:8px; }
+.tutorial-title { font-family:var(--font-display); font-size:1rem; font-weight:600; margin-bottom:6px; }
+.tutorial-subtitle { font-size:.78rem; color:var(--text-muted); margin-bottom:14px; line-height:1.5; }
+.tutorial-steps { display:flex; flex-direction:column; gap:10px; margin-bottom:12px; }
+.tutorial-step { display:flex; gap:10px; align-items:flex-start; }
+.tutorial-step-num {
+  width:22px; height:22px; border-radius:50%; background:var(--accent);
+  color:#fff; font-size:.75rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+}
+.tutorial-step strong { font-size:.82rem; display:block; margin-bottom:2px; }
+.tutorial-step p { font-size:.72rem; color:var(--text-muted); line-height:1.4; margin:0; }
+
+/* Profile button in header */
+.btn-profile {
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+  color:var(--text-on-dark); font-size:.75rem; padding:4px 10px;
+  border-radius:20px; cursor:pointer; font-family:var(--font-body); transition:background .15s;
+}
+.btn-profile:hover { background:rgba(255,255,255,.2); }
+
 </style>
 </head>
 <body>
@@ -874,6 +993,7 @@ body {
   <div class="header-user">
     <span class="header-date" id="headerDate"></span>
     <span class="header-user-email" id="headerUserEmail"></span>
+    <button class="btn-profile" id="btnProfile" style="display:none">👤 Profilo</button>
     <button class="btn-logout" id="btnLogout" style="display:none">Esci</button>
   </div>
 </header>
@@ -882,6 +1002,40 @@ body {
 
   <!-- ═══ COLONNA SINISTRA ═══ -->
   <aside class="col-left">
+
+    <!-- Punteggio Salute -->
+    <section class="card health-score-card" id="healthScoreCard">
+      <div class="hs-top">
+        <div class="hs-score-wrap">
+          <svg class="hs-ring" viewBox="0 0 80 80">
+            <circle class="hs-ring-bg" cx="40" cy="40" r="32"/>
+            <circle class="hs-ring-fill" id="hsRingFill" cx="40" cy="40" r="32"
+              stroke-dasharray="201" stroke-dashoffset="201"/>
+          </svg>
+          <div class="hs-score-inner">
+            <span class="hs-score-num" id="hsScoreNum">—</span>
+            <span class="hs-score-label">/ 100</span>
+          </div>
+        </div>
+        <div class="hs-info">
+          <div class="hs-title">Punteggio Salute</div>
+          <div class="hs-age-wrap">
+            <span class="hs-age-label">Età corporea</span>
+            <span class="hs-age-val" id="hsBodyAge">—</span>
+          </div>
+          <div class="hs-ideal-wrap">
+            <span class="hs-ideal-label">Peso ideale</span>
+            <span class="hs-ideal-val" id="hsIdealWeight">—</span>
+          </div>
+          <div class="hs-status" id="hsStatus">Completa il profilo</div>
+        </div>
+      </div>
+      <div class="hs-bar-wrap">
+        <div class="hs-bar-fill" id="hsBarFill" style="width:0%"></div>
+      </div>
+      <div class="hs-breakdown" id="hsBreakdown"></div>
+    </section>
+
     <section class="card">
       <h2 class="card-title">Stato Generale</h2>
       <p class="card-subtitle">Ultimi 7 giorni</p>
@@ -1076,6 +1230,123 @@ body {
       </div>
     </div>
   </aside>
+
+
+<!-- ═══ PROFILO MODALE ═══ -->
+<div id="profileModal" class="modal-overlay" style="display:none">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2 class="modal-title">👤 Il mio profilo</h2>
+      <button class="modal-close" id="btnCloseProfile">✕</button>
+    </div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="dati">Dati fisici</button>
+      <button class="modal-tab" data-tab="storico">Storico</button>
+    </div>
+
+    <!-- TAB DATI -->
+    <div class="modal-tab-content" id="tabDati">
+      <div class="profile-grid">
+        <div class="form-group">
+          <label>Data di nascita</label>
+          <input type="date" id="profDataNascita" />
+        </div>
+        <div class="form-group">
+          <label>Sesso</label>
+          <select id="profSesso">
+            <option value="">— seleziona —</option>
+            <option value="M">Maschio</option>
+            <option value="F">Femmina</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Altezza <small>(cm)</small></label>
+          <input type="number" id="profAltezza" min="100" max="250" placeholder="es. 175" />
+        </div>
+        <div class="form-group">
+          <label>Peso <small>(kg)</small></label>
+          <input type="number" id="profPeso" min="30" max="300" step="0.1" placeholder="es. 75.5" />
+        </div>
+        <div class="form-group">
+          <label>Acqua <small>(%)</small></label>
+          <input type="number" id="profAcqua" min="30" max="80" step="0.1" placeholder="es. 55.0" />
+        </div>
+        <div class="form-group">
+          <label>Metabolismo basale <small>(kcal)</small></label>
+          <input type="number" id="profMetabolismo" min="1000" max="5000" placeholder="es. 1800" />
+        </div>
+        <div class="form-group">
+          <label>Grasso viscerale <small>(livello 1-20)</small></label>
+          <input type="number" id="profGrassoViscerale" min="1" max="20" step="0.5" placeholder="es. 8" />
+        </div>
+        <div class="form-group">
+          <label>Massa ossea <small>(kg)</small></label>
+          <input type="number" id="profMassaOssea" min="1" max="10" step="0.1" placeholder="es. 3.2" />
+        </div>
+        <div class="form-group">
+          <label>Massa grassa <small>(%)</small></label>
+          <input type="number" id="profMassaGrassa" min="3" max="60" step="0.1" placeholder="es. 22.0" />
+        </div>
+        <div class="form-group">
+          <label>IMC <small>(calcolato automaticamente)</small></label>
+          <input type="number" id="profIMC" readonly style="background:var(--bg-card-alt);color:var(--text-muted)" placeholder="— auto —" />
+        </div>
+        <div class="form-group">
+          <label>Muscoli <small>(%)</small></label>
+          <input type="number" id="profMuscoli" min="20" max="60" step="0.1" placeholder="es. 35.0" />
+        </div>
+        <div class="form-group">
+          <label>Proteine <small>(%)</small></label>
+          <input type="number" id="profProteine" min="5" max="25" step="0.1" placeholder="es. 18.0" />
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-primary" id="btnSaveProfilo">💾 Salva profilo</button>
+        <div class="profile-last-saved" id="profileLastSaved"></div>
+      </div>
+    </div>
+
+    <!-- TAB STORICO -->
+    <div class="modal-tab-content" id="tabStorico" style="display:none">
+      <div id="profileHistory" class="profile-history"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tutorial -->
+<div id="tutorialCard" class="tutorial-overlay" style="display:none">
+  <div class="tutorial-card">
+    <button class="tutorial-close" id="btnCloseTutorial">✕</button>
+    <div class="tutorial-icon">🌱</div>
+    <h3 class="tutorial-title">Benvenuto in Versione Migliore di Me!</h3>
+    <p class="tutorial-subtitle">Nessuna attività pianificata per i prossimi giorni.<br>Inizia il tuo percorso in 3 passi:</p>
+    <div class="tutorial-steps">
+      <div class="tutorial-step">
+        <span class="tutorial-step-num">1</span>
+        <div>
+          <strong>Completa il tuo profilo</strong>
+          <p>Clicca su 👤 Profilo nell'header per inserire i tuoi dati fisici e ottenere il punteggio salute personalizzato.</p>
+        </div>
+      </div>
+      <div class="tutorial-step">
+        <span class="tutorial-step-num">2</span>
+        <div>
+          <strong>Pianifica la settimana</strong>
+          <p>Usa il calendario settimanale per aggiungere le attività che vuoi svolgere. La libreria ha già alcune attività pronte!</p>
+        </div>
+      </div>
+      <div class="tutorial-step">
+        <span class="tutorial-step-num">3</span>
+        <div>
+          <strong>Aggiorna il riepilogo serale</strong>
+          <p>Ogni sera inserisci sonno e passi per tracciare il tuo andamento e sbloccare achievements.</p>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btnTutorialStart" style="width:100%;margin-top:8px">Inizia ora 🚀</button>
+  </div>
+</div>
 
 </main>
 
@@ -1574,6 +1845,7 @@ async function renderHealthSection() {
   }
   upsertChart('sonno','chartSonno',labels,sonnoData,'#5b8fa8',12);
   upsertChart('passi','chartPassi',labels,passiData,'#6b9e78',15000);
+  await renderHealthScore();
 }
 
 async function saveHealthToday() {
@@ -1916,20 +2188,7 @@ function renderHeader() {
    DEMO DATA
    ══════════════════════════════════════════════════════ */
 async function maybeInsertDemoData() {
-  const activities=await getActivities();
-  const health=await getHealthData();
-  if(Object.keys(activities).length>0||Object.keys(health).length>0) return;
-  const today=new Date();
-  for(let i=4;i>=0;i--) {
-    const d=new Date(today); d.setDate(d.getDate()-i);
-    const ds=formatDate(d);
-    const n=2+Math.floor(Math.random()*3);
-    activities[ds]=DEMO_ACTIVITIES.slice().sort(()=>Math.random()-.5).slice(0,n).map(a=>({...a,id:uid(),done:i>0?Math.random()>.35:false}));
-  }
-  const oBase=[7,7.5,6,8,7,6.5,7.5], pBase=[9200,6800,11000,7400,8500,5200,10300];
-  for(let i=6;i>=0;i--) { const d=new Date(today); d.setDate(d.getDate()-i); health[formatDate(d)]={sonno:oBase[6-i],passi:pBase[6-i]}; }
-  await saveActivities(activities);
-  await saveHealthData(health);
+  // Solo libreria demo — nessuna attività pre-inserita nel calendario
   const lib=await getLibrary();
   if(!lib.length) {
     await saveLibrary([
@@ -1939,6 +2198,286 @@ async function maybeInsertDemoData() {
       {id:uid(),titolo:'Yoga mattutino',categoria:'Yoga',orario:'07:30',durata:30,note:''},
       {id:uid(),titolo:'Camminata digestiva',categoria:'Bici/Camminata',orario:'20:00',durata:20,note:'Dopo cena'},
     ]);
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════
+   PROFILO FISICO
+   ══════════════════════════════════════════════════════ */
+async function getProfileHistory() { return await fsGet('profileHistory',[]); }
+async function saveProfileHistory(d) { await fsSet('profileHistory',d); }
+async function getLatestProfile() {
+  const hist=await getProfileHistory();
+  return hist.length ? hist[hist.length-1] : null;
+}
+
+function calcAge(dataNascita) {
+  if(!dataNascita) return null;
+  const birth=new Date(dataNascita);
+  const today=new Date();
+  let age=today.getFullYear()-birth.getFullYear();
+  const m=today.getMonth()-birth.getMonth();
+  if(m<0||(m===0&&today.getDate()<birth.getDate())) age--;
+  return age;
+}
+
+function calcIMC(peso,altezza) {
+  if(!peso||!altezza) return null;
+  return +(peso/((altezza/100)**2)).toFixed(1);
+}
+
+function calcPesoIdeale(altezza,sesso) {
+  if(!altezza||!sesso) return null;
+  // Formula Lorentz
+  if(sesso==='M') return +(altezza - 100 - (altezza-150)/4).toFixed(1);
+  return +(altezza - 100 - (altezza-150)/2.5).toFixed(1);
+}
+
+async function saveProfiloOggi() {
+  const dataNascita = document.getElementById('profDataNascita').value;
+  const sesso       = document.getElementById('profSesso').value;
+  const altezza     = parseFloat(document.getElementById('profAltezza').value)||null;
+  const peso        = parseFloat(document.getElementById('profPeso').value)||null;
+  const acqua       = parseFloat(document.getElementById('profAcqua').value)||null;
+  const metabolismo = parseFloat(document.getElementById('profMetabolismo').value)||null;
+  const grassoVisc  = parseFloat(document.getElementById('profGrassoViscerale').value)||null;
+  const massaOssea  = parseFloat(document.getElementById('profMassaOssea').value)||null;
+  const massaGrassa = parseFloat(document.getElementById('profMassaGrassa').value)||null;
+  const muscoli     = parseFloat(document.getElementById('profMuscoli').value)||null;
+  const proteine    = parseFloat(document.getElementById('profProteine').value)||null;
+
+  const imc = calcIMC(peso,altezza);
+  document.getElementById('profIMC').value = imc||'';
+
+  const entry = {
+    data: new Date().toISOString(),
+    dataNascita, sesso, altezza, peso, acqua, metabolismo,
+    grassoVisc, massaOssea, massaGrassa, imc, muscoli, proteine
+  };
+
+  const hist = await getProfileHistory();
+  hist.push(entry);
+  await saveProfileHistory(hist);
+
+  document.getElementById('profileLastSaved').textContent =
+    'Salvato: '+new Date().toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+
+  showToast('✓ Profilo aggiornato');
+  await renderHealthScore();
+  await renderProfileHistory();
+}
+
+async function loadLatestProfileIntoForm() {
+  const p = await getLatestProfile();
+  if(!p) return;
+  if(p.dataNascita) document.getElementById('profDataNascita').value = p.dataNascita;
+  if(p.sesso)       document.getElementById('profSesso').value       = p.sesso;
+  if(p.altezza)     document.getElementById('profAltezza').value     = p.altezza;
+  if(p.peso)        document.getElementById('profPeso').value        = p.peso;
+  if(p.acqua)       document.getElementById('profAcqua').value       = p.acqua;
+  if(p.metabolismo) document.getElementById('profMetabolismo').value = p.metabolismo;
+  if(p.grassoVisc)  document.getElementById('profGrassoViscerale').value = p.grassoVisc;
+  if(p.massaOssea)  document.getElementById('profMassaOssea').value  = p.massaOssea;
+  if(p.massaGrassa) document.getElementById('profMassaGrassa').value = p.massaGrassa;
+  if(p.imc)         document.getElementById('profIMC').value         = p.imc;
+  if(p.muscoli)     document.getElementById('profMuscoli').value     = p.muscoli;
+  if(p.proteine)    document.getElementById('profProteine').value    = p.proteine;
+  if(p.data) document.getElementById('profileLastSaved').textContent =
+    'Ultimo aggiornamento: '+new Date(p.data).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+}
+
+async function renderProfileHistory() {
+  const hist = await getProfileHistory();
+  const el   = document.getElementById('profileHistory');
+  if(!el) return;
+  if(!hist.length) { el.innerHTML='<p style="font-size:.78rem;color:var(--text-muted);text-align:center;padding:20px 0">Nessuna rilevazione salvata ancora.</p>'; return; }
+  const fields=[
+    {k:'peso',l:'Peso',u:'kg'},{k:'altezza',l:'Altezza',u:'cm'},{k:'imc',l:'IMC',u:''},
+    {k:'massaGrassa',l:'Grasso',u:'%'},{k:'muscoli',l:'Muscoli',u:'%'},{k:'acqua',l:'Acqua',u:'%'},
+    {k:'grassoVisc',l:'Gr. viscerale',u:''},{k:'proteine',l:'Proteine',u:'%'},{k:'metabolismo',l:'Metabolismo',u:'kcal'},
+  ];
+  el.innerHTML='';
+  [...hist].reverse().forEach(entry=>{
+    const div=document.createElement('div'); div.className='history-item';
+    const age=calcAge(entry.dataNascita);
+    div.innerHTML=`<div class="history-date">${new Date(entry.data).toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}${age?' · '+age+' anni':''}</div>
+      <div class="history-grid">${fields.map(f=>entry[f.k]!=null?`<div class="history-field"><div class="history-field-label">${f.l}</div><div class="history-field-val">${entry[f.k]}${f.u}</div></div>`:'').join('')}</div>`;
+    el.appendChild(div);
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   ALGORITMO PUNTEGGIO SALUTE
+   ══════════════════════════════════════════════════════ */
+async function computeHealthScore() {
+  const p      = await getLatestProfile();
+  const health = await getHealthData();
+  const acts   = await getActivities();
+  const today  = formatDate(new Date());
+  const th     = health[today];
+  const gam    = await getGamData();
+
+  const scores=[];
+  const items=[];
+
+  // 1. SONNO (peso 20)
+  if(th?.sonno!=null) {
+    const s=th.sonno;
+    // Ottimale 7-9h
+    let sc = s>=7&&s<=9 ? 100 : s>=6&&s<7 ? 70 : s>=9&&s<=10 ? 80 : s>=5&&s<6 ? 40 : 20;
+    scores.push({w:20,v:sc}); items.push({l:'Sonno',v:sc,c:'#5b8fa8'});
+  }
+
+  // 2. PASSI (peso 20)
+  if(th?.passi!=null) {
+    const sc=Math.min(Math.round(th.passi/80),100);
+    scores.push({w:20,v:sc}); items.push({l:'Passi',v:sc,c:'#6b9e78'});
+  }
+
+  // 3. ATTIVITÀ COMPLETATE OGGI (peso 15)
+  const todayActs=acts[today]||[];
+  if(todayActs.length>0) {
+    const done=todayActs.filter(a=>a.done).length;
+    const sc=Math.round(done/todayActs.length*100);
+    scores.push({w:15,v:sc}); items.push({l:'Attività',v:sc,c:'#b5804f'});
+  }
+
+  // 4. IMC (peso 15) - range ottimale 18.5-24.9
+  if(p?.imc!=null) {
+    const imc=p.imc;
+    let sc;
+    if(imc>=18.5&&imc<=24.9) sc=100;
+    else if(imc>=25&&imc<=27) sc=75;
+    else if(imc>=17&&imc<18.5) sc=70;
+    else if(imc>27&&imc<=30) sc=50;
+    else if(imc>30&&imc<=35) sc=25;
+    else sc=10;
+    scores.push({w:15,v:sc}); items.push({l:'IMC',v:sc,c:'#8b7cc8'});
+  }
+
+  // 5. GRASSO VISCERALE (peso 10) - ottimale 1-9
+  if(p?.grassoVisc!=null) {
+    const gv=p.grassoVisc;
+    let sc = gv<=9?100 : gv<=12?70 : gv<=15?40 : 15;
+    scores.push({w:10,v:sc}); items.push({l:'Gr. viscerale',v:sc,c:'#d97060'});
+  }
+
+  // 6. MASSA GRASSA % (peso 10) - ottimale M:10-20 F:18-28
+  if(p?.massaGrassa!=null&&p?.sesso) {
+    const mg=p.massaGrassa, sex=p.sesso;
+    let sc;
+    if(sex==='M') sc = mg>=10&&mg<=20?100:mg>20&&mg<=25?70:mg>25&&mg<=30?45:mg<10?80:20;
+    else          sc = mg>=18&&mg<=28?100:mg>28&&mg<=33?70:mg>33&&mg<=38?45:mg<18?80:20;
+    scores.push({w:10,v:sc}); items.push({l:'Massa grassa',v:sc,c:'#c9a84c'});
+  }
+
+  // 7. MUSCOLI % (peso 5)
+  if(p?.muscoli!=null&&p?.sesso) {
+    const mu=p.muscoli, sex=p.sesso;
+    let sc;
+    if(sex==='M') sc = mu>=40?100:mu>=35?80:mu>=30?60:mu>=25?40:20;
+    else          sc = mu>=33?100:mu>=28?80:mu>=23?60:mu>=18?40:20;
+    scores.push({w:5,v:sc}); items.push({l:'Muscoli',v:sc,c:'#4ea8a0'});
+  }
+
+  // 8. IDRATAZIONE % (peso 5)
+  if(p?.acqua!=null&&p?.sesso) {
+    const aq=p.acqua, sex=p.sesso;
+    let sc;
+    if(sex==='M') sc = aq>=55&&aq<=65?100:aq>=50&&aq<55?70:aq>=65&&aq<=70?80:aq<50?30:20;
+    else          sc = aq>=45&&aq<=60?100:aq>=40&&aq<45?70:aq>=60&&aq<=65?80:aq<40?30:20;
+    scores.push({w:5,v:sc}); items.push({l:'Idratazione',v:sc,c:'#4a9ad4'});
+  }
+
+  if(!scores.length) return null;
+
+  // Media pesata
+  const totalW=scores.reduce((s,x)=>s+x.w,0);
+  const score=Math.round(scores.reduce((s,x)=>s+x.v*x.w,0)/totalW);
+
+  // ETÀ CORPOREA
+  let bodyAge=null;
+  if(p?.dataNascita) {
+    const age=calcAge(p.dataNascita);
+    if(age) {
+      // Aggiustamento: ogni 10 punti sotto 50 = +1 anno corporeo
+      const delta=Math.round((50-score)/10);
+      bodyAge=Math.max(age+delta,age-15);
+    }
+  }
+
+  return {score, items, bodyAge};
+}
+
+async function renderHealthScore() {
+  const result = await computeHealthScore();
+  const p      = await getLatestProfile();
+
+  const numEl   = document.getElementById('hsScoreNum');
+  const ringFill= document.getElementById('hsRingFill');
+  const barFill = document.getElementById('hsBarFill');
+  const status  = document.getElementById('hsStatus');
+  const bodyAge = document.getElementById('hsBodyAge');
+  const idealW  = document.getElementById('hsIdealWeight');
+  const breakdown=document.getElementById('hsBreakdown');
+
+  // Peso ideale (indipendente dai dati odierni)
+  if(p?.altezza&&p?.sesso) {
+    const pi=calcPesoIdeale(p.altezza,p.sesso);
+    idealW.textContent=pi?pi+' kg':'—';
+  } else { idealW.textContent='—'; }
+
+  if(!result) {
+    numEl.textContent='—';
+    status.textContent='Completa profilo e riepilogo per il punteggio';
+    bodyAge.textContent='—';
+    breakdown.innerHTML='';
+    return;
+  }
+
+  const {score,items,bodyAge:ba}=result;
+
+  // Ring SVG: circumference=201
+  const offset=Math.round(201-(score/100*201));
+  ringFill.style.strokeDashoffset=offset;
+  // Color based on score
+  const col = score>=80?'#4ab888':score>=60?'#c9a84c':score>=40?'#d97060':'#c0614a';
+  ringFill.style.stroke=col;
+  barFill.style.width=score+'%';
+  barFill.style.background=col;
+
+  numEl.textContent=score;
+  bodyAge.textContent=ba?ba+' anni':'—';
+
+  const lbl = score>=85?'🟢 Eccellente':score>=70?'🟡 Buono':score>=55?'🟠 Discreto':score>=40?'🔴 Da migliorare':'⚫ Critico';
+  status.textContent=lbl;
+
+  // Breakdown items
+  breakdown.innerHTML=items.map(it=>`
+    <div class="hs-item">
+      <span class="hs-item-label">${it.l}</span>
+      <div class="hs-item-bar"><div class="hs-item-fill" style="width:${it.v}%;background:${it.c}"></div></div>
+      <span class="hs-item-val">${it.v}</span>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   TUTORIAL
+   ══════════════════════════════════════════════════════ */
+async function checkAndShowTutorial() {
+  const activities = await getActivities();
+  const today = formatDate(new Date());
+  // Controlla i prossimi 7 giorni
+  let hasFuture = false;
+  for(let i=0;i<=7;i++) {
+    const d=addDays(today,i);
+    if(activities[d]&&activities[d].length>0) { hasFuture=true; break; }
+  }
+  // Mostra tutorial solo se nessuna attività futura e non già chiuso
+  const dismissed = sessionStorage.getItem('tutorialDismissed');
+  if(!hasFuture&&!dismissed) {
+    setTimeout(()=>{ document.getElementById('tutorialCard').style.display='block'; },1500);
   }
 }
 
@@ -1980,6 +2519,7 @@ async function startApp(user) {
   document.getElementById('authScreen').style.display='none';
   document.getElementById('headerUserEmail').textContent=user.email;
   document.getElementById('btnLogout').style.display='';
+  document.getElementById('btnProfile').style.display='';
   document.querySelector('.app-layout').style.display='';
   try {
     await initApp();
@@ -2005,6 +2545,7 @@ async function initApp() {
   renderHeader();
   await renderCatPicker();
   console.log('initApp: catPicker ok');
+  await renderHealthScore();
   renderColorPicker('sage');
   await renderCalendar();
   await renderDayDetail();
@@ -2107,8 +2648,7 @@ async function initApp() {
 /* ══════════════════════════════════════════════════════
    BOOTSTRAP
    ══════════════════════════════════════════════════════ */
-function _bootstrap() {
-  const {_auth:auth,_db:db}={_auth,_db};
+async function _bootstrap() {
   document.querySelector('.app-layout').style.display='none';
 
   onAuthStateChanged(_auth, user=>{ if(user) startApp(user); else showAuth(); });
@@ -2118,11 +2658,61 @@ function _bootstrap() {
   document.getElementById('authSubmitBtn').addEventListener('click',()=>handleAuthSubmit());
   document.getElementById('authEmail').addEventListener('keydown',e=>{ if(e.key==='Enter') handleAuthSubmit(); });
   document.getElementById('authPassword').addEventListener('keydown',e=>{ if(e.key==='Enter') handleAuthSubmit(); });
+  // Profile button
+  document.getElementById('btnProfile').addEventListener('click', async ()=>{
+    await loadLatestProfileIntoForm();
+    await renderProfileHistory();
+    document.getElementById('profileModal').style.display='flex';
+  });
+  document.getElementById('btnCloseProfile').addEventListener('click',()=>{
+    document.getElementById('profileModal').style.display='none';
+  });
+  document.getElementById('profileModal').addEventListener('click', e=>{
+    if(e.target===document.getElementById('profileModal'))
+      document.getElementById('profileModal').style.display='none';
+  });
+
+  // Profile tabs
+  document.querySelectorAll('.modal-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tabDati').style.display=tab.dataset.tab==='dati'?'':'none';
+      document.getElementById('tabStorico').style.display=tab.dataset.tab==='storico'?'':'none';
+    });
+  });
+
+  // Auto-calc IMC when peso/altezza change
+  ['profPeso','profAltezza'].forEach(id=>{
+    document.getElementById(id).addEventListener('input',()=>{
+      const p=parseFloat(document.getElementById('profPeso').value);
+      const a=parseFloat(document.getElementById('profAltezza').value);
+      const imc=calcIMC(p,a);
+      document.getElementById('profIMC').value=imc||'';
+    });
+  });
+
+  document.getElementById('btnSaveProfilo').addEventListener('click',()=>saveProfiloOggi());
+
+  // Tutorial
+  document.getElementById('btnCloseTutorial').addEventListener('click',()=>{
+    sessionStorage.setItem('tutorialDismissed','1');
+    document.getElementById('tutorialCard').style.display='none';
+  });
+  document.getElementById('btnTutorialStart').addEventListener('click',()=>{
+    sessionStorage.setItem('tutorialDismissed','1');
+    document.getElementById('tutorialCard').style.display='none';
+    document.getElementById('btnProfile').click();
+  });
+
+  await checkAndShowTutorial();
+
   document.getElementById('btnLogout').addEventListener('click', async ()=>{
     await signOut(_auth);
     _uid=null;
     document.getElementById('headerUserEmail').textContent='';
     document.getElementById('btnLogout').style.display='none';
+    document.getElementById('btnProfile').style.display='none';
     charts={sonno:null,passi:null};
   });
 }
