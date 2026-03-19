@@ -278,19 +278,28 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 /* ── Radio ripetizione ── */
-.recurrence-options { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
-.radio-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: .83rem; color: var(--text-secondary); }
-.radio-label input[type="radio"] { display: none; }
-.radio-custom {
-  width: 16px; height: 16px; border-radius: 50%;
-  border: 2px solid var(--border); background: var(--bg-card-alt);
-  flex-shrink: 0; transition: all .15s;
-  display: flex; align-items: center; justify-content: center;
+.recurrence-options { display:flex; flex-direction:column; gap:4px; margin-top:2px; }
+.radio-label {
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; font-size:.82rem; color:var(--text-secondary);
+  padding:5px 8px; border-radius:var(--radius-sm);
+  border:1.5px solid transparent; transition:all .15s;
 }
-.radio-label input:checked + .radio-custom { border-color: var(--accent); background: var(--accent); }
-.radio-label input:checked + .radio-custom::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #fff; display: block; }
-.radio-label:has(input:checked) { color: var(--accent-dark); font-weight: 500; }
-.recurrence-badge { font-size: .65rem; font-weight: 500; padding: 1px 6px; border-radius: 8px; background: #eae8f5; color: #5040a0; white-space: nowrap; }
+.radio-label:hover { background:var(--bg-card-alt); border-color:var(--border); }
+.radio-label-left { display:flex; align-items:center; gap:8px; }
+.radio-label input[type="radio"] { display:none; }
+.radio-custom {
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid var(--border); background:var(--bg-card-alt);
+  flex-shrink:0; transition:all .15s;
+  display:flex; align-items:center; justify-content:center;
+}
+.radio-label input:checked + .radio-custom { border-color:var(--accent); background:var(--accent); }
+.radio-label input:checked + .radio-custom::after { content:''; width:5px; height:5px; border-radius:50%; background:#fff; display:block; }
+.radio-label:has(input:checked) { color:var(--accent-dark); font-weight:600; background:var(--accent-light); border-color:var(--accent); }
+.radio-label-value { font-size:.72rem; color:var(--text-muted); font-weight:400; white-space:nowrap; }
+.radio-label:has(input:checked) .radio-label-value { color:var(--accent-dark); }
+.recurrence-badge { font-size:.65rem; font-weight:500; padding:1px 6px; border-radius:8px; background:#eae8f5; color:#5040a0; white-space:nowrap; }
 
 
 /* ── View switcher ── */
@@ -1207,7 +1216,7 @@ body {
           <input type="date" id="actDataInizio" />
         </div>
         <div class="form-group">
-          <label for="actDataFine" id="actDataFineLabel" style="display:none">Ripeti fino al *</label>
+          <label for="actDataFine" id="actDataFineLabel" style="display:none">Ripeti fino al <small>(vuoto = 1 anno)</small></label>
           <input type="date" id="actDataFine" style="display:none" />
         </div>
       </div>
@@ -1239,12 +1248,24 @@ body {
       </div>
 
       <div class="form-group">
-        <label>Ripetizione</label>
+        <label style="font-weight:700;color:var(--text-primary);">Ripetizione</label>
         <div class="recurrence-options">
-          <label class="radio-label"><input type="radio" name="recurrence" value="nessuna" checked /><span class="radio-custom"></span>Solo questo giorno</label>
-          <label class="radio-label"><input type="radio" name="recurrence" value="giornaliera" /><span class="radio-custom"></span>Ogni giorno</label>
-          <label class="radio-label"><input type="radio" name="recurrence" value="feriali" /><span class="radio-custom"></span>Feriali (Lun–Ven)</label>
-          <label class="radio-label"><input type="radio" name="recurrence" value="weekend" /><span class="radio-custom"></span>Weekend (Sab–Dom)</label>
+          <label class="radio-label">
+            <span class="radio-label-left"><input type="radio" name="recurrence" value="nessuna" checked /><span class="radio-custom"></span><strong>Solo questo giorno</strong></span>
+            <span class="radio-label-value">una volta</span>
+          </label>
+          <label class="radio-label">
+            <span class="radio-label-left"><input type="radio" name="recurrence" value="giornaliera" /><span class="radio-custom"></span><strong>Ogni giorno</strong></span>
+            <span class="radio-label-value">lun – dom</span>
+          </label>
+          <label class="radio-label">
+            <span class="radio-label-left"><input type="radio" name="recurrence" value="feriali" /><span class="radio-custom"></span><strong>Feriali</strong></span>
+            <span class="radio-label-value">lun – ven</span>
+          </label>
+          <label class="radio-label">
+            <span class="radio-label-left"><input type="radio" name="recurrence" value="weekend" /><span class="radio-custom"></span><strong>Weekend</strong></span>
+            <span class="radio-label-value">sab – dom</span>
+          </label>
         </div>
       </div>
       <div class="form-group">
@@ -2000,7 +2021,12 @@ function getFormActivity() {
   if(!categoria) { showToast('⚠ Seleziona una categoria'); return null; }
   const ripetizione=document.querySelector('input[name="recurrence"]:checked').value;
   const dataFine=ripetizione!=='nessuna'?document.getElementById('actDataFine').value:null;
-  if(ripetizione!=='nessuna'&&!dataFine) { showToast('⚠ Seleziona la data di fine'); return null; }
+  // Se ripetizione attiva ma nessuna data fine → default 1 anno da dataInizio
+  if(ripetizione!=='nessuna'&&!dataFine) {
+    const _d=new Date(dataInizio+'T12:00:00');
+    _d.setFullYear(_d.getFullYear()+1);
+    dataFine=formatDate(_d);
+  }
   if(dataFine&&dataFine<dataInizio) { showToast('⚠ Data fine prima di inizio'); return null; }
   return {titolo,categoria,orario:document.getElementById('actOrario').value||'09:00',durata:parseInt(document.getElementById('actDurata').value)||0,note:document.getElementById('actNote').value.trim(),dataInizio,ripetizione,dataFine};
 }
