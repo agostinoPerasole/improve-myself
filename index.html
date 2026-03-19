@@ -757,12 +757,7 @@ body {
 .btn-logout:hover { background: rgba(255,255,255,.2); }
 
 /* Loading overlay */
-#loadingOverlay {
-  position: fixed; inset: 0; z-index: 9998;
-  background: var(--bg); display: flex;
-  align-items: center; justify-content: center;
-  flex-direction: column; gap: 12px;
-}
+
 .loading-spinner {
   width: 36px; height: 36px; border-radius: 50%;
   border: 3px solid var(--border);
@@ -838,28 +833,10 @@ body {
 </head>
 <body>
 
-<div id="loadingOverlay">
-  <div class="loading-spinner"></div>
-  <div class="loading-text">Caricamento...</div>
+
 </div>
 
-<div id="authScreen" style="display:none">
-  <div class="auth-card">
-    <div class="auth-logo">✦</div>
-    <h1 class="auth-title">Versione Migliore di Me</h1>
-    <p class="auth-subtitle">Il tuo spazio personale per il benessere quotidiano</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin">Accedi</button>
-      <button class="auth-tab" id="tabRegister">Registrati</button>
-    </div>
-    <div class="auth-form">
-      <input type="email" id="authEmail" placeholder="Email" autocomplete="email" />
-      <input type="password" id="authPassword" placeholder="Password (min. 6 caratteri)" autocomplete="current-password" />
-      <div class="auth-error" id="authError"></div>
-      <button class="auth-btn" id="authSubmitBtn">Accedi</button>
-    </div>
-  </div>
-</div>
+
 
 
 <!-- Loading overlay -->
