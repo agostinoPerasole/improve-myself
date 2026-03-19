@@ -1998,12 +1998,18 @@ async function handleAuthSubmit() {
 async function startApp(user) {
   _uid=user.uid;
   console.log('startApp chiamata per:', user.email);
+  // Mostra subito l'app, nascondi loader
   document.getElementById('loadingOverlay').style.display='none';
   document.getElementById('authScreen').style.display='none';
   document.getElementById('headerUserEmail').textContent=user.email;
   document.getElementById('btnLogout').style.display='';
   document.querySelector('.app-layout').style.display='';
-  await initApp();
+  try {
+    await initApp();
+    console.log('initApp completata');
+  } catch(err) {
+    console.error('Errore in initApp:', err);
+  }
 }
 
 function showAuth() {
@@ -2016,9 +2022,12 @@ function showAuth() {
    INIT APP
    ══════════════════════════════════════════════════════ */
 async function initApp() {
+  console.log('initApp: start');
   await maybeInsertDemoData();
+  console.log('initApp: demo data ok');
   renderHeader();
   await renderCatPicker();
+  console.log('initApp: catPicker ok');
   renderColorPicker('sage');
   await renderCalendar();
   await renderDayDetail();
